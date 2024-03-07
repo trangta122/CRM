@@ -21,7 +21,7 @@ public class CreateUserRequest {
     @NotBlank
     private String password;
 
-    private List<Role> role;
+    private List<String> role;
 
     public String getFirstname() {
         return firstname;
@@ -87,11 +87,11 @@ public class CreateUserRequest {
         this.password = password;
     }
 
-    public List<Role> getRole() {
+    public List<String> getRole() {
         return role;
     }
 
-    public void setRole(List<Role> role) {
+    public void setRole(List<String> role) {
         this.role = role;
     }
 }

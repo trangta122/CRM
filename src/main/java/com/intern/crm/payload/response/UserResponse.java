@@ -1,10 +1,7 @@
 package com.intern.crm.payload.response;
 
-import com.intern.crm.entity.Role;
-
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class UserResponse {
     private String id;

@@ -1,6 +1,7 @@
 package com.intern.crm.entity;
 
 import com.intern.crm.audit.Auditable;
+import com.intern.crm.payload.response.RoleResponse;
 import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
