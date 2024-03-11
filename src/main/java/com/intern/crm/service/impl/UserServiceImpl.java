@@ -1,7 +1,7 @@
 package com.intern.crm.service.impl;
 
 import com.intern.crm.entity.User;
-import com.intern.crm.payload.response.UserResponse;
+import com.intern.crm.payload.response.UserModel;
 import com.intern.crm.repository.RoleRepository;
 import com.intern.crm.repository.UserRepository;
 import com.intern.crm.service.UserService;
@@ -24,33 +24,34 @@ public class UserServiceImpl implements UserService {
     private ModelMapper modelMapper;
 
     @Override
-    public List<UserResponse> findAllUsers() {
+    public List<UserModel> findAllUsers() {
         List<User> users = userRepository.findAll();
 
-            return users.stream().map(u -> modelMapper.map(u, UserResponse.class)).collect(Collectors.toList());
+            return users.stream().map(u -> modelMapper.map(u, UserModel.class)).collect(Collectors.toList());
     }
 
     @Override
-    public Optional<UserResponse> findUserById(String id) {
+    public Optional<UserModel> findUserById(String id) {
         Optional<User> existsUser = userRepository.findById(id);
-        UserResponse userResponse = modelMapper.map(existsUser, UserResponse.class);
+        UserModel userResponse = modelMapper.map(existsUser, UserModel.class);
         return Optional.ofNullable(userResponse);
     }
 
     @Override
-    public UserResponse updateUser(UserResponse user, String id) {
-        User userMatching = userRepository.findById(id).get();
-        userMatching.setFirstname(user.getFirstname());
-        userMatching.setLastname(user.getLastname());
-        userMatching.setEmail(user.getEmail());
-        userMatching.setPhone(user.getPhone());
-        userMatching.setBirthday(user.getBirthday());
-        userMatching.setGender(user.getGender());
-        userMatching.setLastModifiedDate(new Date());
+    public UserModel updateUser(UserModel userModel, String id) {
+        User userMatchingID = userRepository.findById(id).get();
+        userMatchingID.setFirstname(userModel.getFirstname());
+        userMatchingID.setLastname(userModel.getLastname());
+        userMatchingID.setEmail(userModel.getEmail());
+        userMatchingID.setPhone(userModel.getPhone());
+        userMatchingID.setBirthday(userModel.getBirthday());
+        userMatchingID.setGender(userModel.getGender());
+        userMatchingID.setLastModifiedDate(new Date());
+        userMatchingID.setRole(userModel.getRole());
         //without setting role name
-        userRepository.save(userMatching);
-        UserResponse u = modelMapper.map(userMatching, UserResponse.class);
-        return u;
+        userRepository.save(userMatchingID);
+        UserModel user = modelMapper.map(userMatchingID, UserModel.class);
+        return user;
     }
 
     @Override
@@ -65,5 +66,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findByEmailContaining(String email, Pageable pageable) {
         return userRepository.findByEmailContaining(email, pageable);
+    }
+
+    @Override
+    public List<UserModel> findByRoleId(Integer id) {
+        return null;
     }
 }

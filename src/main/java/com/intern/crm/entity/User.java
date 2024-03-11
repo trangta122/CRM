@@ -1,8 +1,10 @@
 package com.intern.crm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.intern.crm.audit.Auditable;
-import com.intern.crm.payload.response.RoleResponse;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.*;
@@ -34,11 +36,9 @@ public class User extends Auditable<String> {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-                    joinColumns = @JoinColumn(name = "user_id"),
-                    inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "roleId")
+    private Role role;
 
     public User() {
     }
@@ -84,7 +84,7 @@ public class User extends Auditable<String> {
     }
 
     public void setFullname(String fullname) {
-        this.fullname = lastname + " " + firstname;
+        this.fullname = fullname;
     }
 
     public String getEmail() {
@@ -135,11 +135,11 @@ public class User extends Auditable<String> {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

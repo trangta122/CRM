@@ -11,17 +11,14 @@ import java.util.Set;
 public class CreateUserRequest {
     private String firstname;
     private String lastname;
+    private String fullname;
     private String email;
     private String phone;
     private Date birthday;
     private String gender;
-
-    @NotBlank
     private String username;
-    @NotBlank
     private String password;
-
-    private List<String> role;
+    private Role role;
 
     public String getFirstname() {
         return firstname;
@@ -37,6 +34,14 @@ public class CreateUserRequest {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public String getFullname() {
+        return lastname + " " + firstname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public String getEmail() {
@@ -87,11 +92,11 @@ public class CreateUserRequest {
         this.password = password;
     }
 
-    public List<String> getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(List<String> role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }

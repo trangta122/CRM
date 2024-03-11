@@ -1,9 +1,10 @@
 package com.intern.crm.payload.response;
 
-import java.util.Date;
-import java.util.List;
+import com.intern.crm.entity.Role;
 
-public class UserResponse {
+import java.util.Date;
+
+public class UserModel {
     private String id;
     private String firstname;
     private String lastname;
@@ -13,13 +14,11 @@ public class UserResponse {
     private Date birthday;
     private String gender;
     private String username;
-    private List<RoleResponse> roles;
-
+    private Role role;
     private String createdBy;
     private Date createdDate;
     private String lastModifiedBy;
     private Date lastModifiedDate;
-
 
     //getter & setter
 
@@ -52,7 +51,7 @@ public class UserResponse {
     }
 
     public void setFullname(String fullname) {
-        this.fullname = lastname + " " + firstname;
+        this.fullname = fullname;
     }
 
     public String getEmail() {
@@ -95,11 +94,11 @@ public class UserResponse {
         this.username = username;
     }
 
-    public List<RoleResponse> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(List<RoleResponse> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
