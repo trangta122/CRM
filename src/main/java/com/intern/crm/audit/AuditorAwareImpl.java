@@ -9,16 +9,16 @@ import java.util.Optional;
 
 public class AuditorAwareImpl implements AuditorAware<String> {
 
-    @Override
-    public Optional<String> getCurrentAuditor() {
-        return Optional.of("Administrator");
-    }
 //    @Override
 //    public Optional<String> getCurrentAuditor() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication == null || !authentication.isAuthenticated()) {
-//            return null;
-//        }
-//        return ((UserDetails) authentication.getPrincipal()).getUsername().describeConstable();
+//        return Optional.of("Administrator");
 //    }
+    @Override
+    public Optional<String> getCurrentAuditor() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+        return ((UserDetails) authentication.getPrincipal()).getUsername().describeConstable();
+    }
 }

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+@SpringBootApplication
 @OpenAPIDefinition (
 		info = @Info (
 				title = "CRM APIs document",
@@ -21,21 +21,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 		)
 )
 
-//@SecurityScheme(
-//		name = "Authorization",
-//		scheme = "Bearer",
-//		type = SecuritySchemeType.HTTP,
-//		in = SecuritySchemeIn.HEADER
-//)
+@SecurityScheme(
+		name = "Authorization",
+		scheme = "Bearer",
+		type = SecuritySchemeType.HTTP,
+		in = SecuritySchemeIn.HEADER
+)
 public class CrmApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CrmApplication.class, args);
 	}
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
 
 }
