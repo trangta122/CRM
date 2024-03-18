@@ -15,11 +15,9 @@ public interface UserService {
 
     UserModel updateUser(UserModel user, String id);
 
-    void deleteUser(String id);
+    //void deleteUser(String id);
 
     Page<User> findAll(Pageable pageable);
 
     Page<User> findByEmailContaining(String email, Pageable pageable);
-
-    List<UserModel> findByRoleId(Integer id);
 }

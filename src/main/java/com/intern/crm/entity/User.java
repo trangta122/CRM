@@ -1,16 +1,19 @@
 package com.intern.crm.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.intern.crm.audit.Auditable;
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "email")
+})
 @EntityListeners(AuditingEntityListener.class)
 public class User extends Auditable<String> {
     @Id
@@ -23,7 +26,8 @@ public class User extends Auditable<String> {
     private String lastname;
     @Column(name = "fullname")
     private String fullname;
-    @Column(name = "email")
+    @NotBlank
+    @Email
     private String email;
     @Column(name = "phone")
     private String phone;
@@ -32,18 +36,20 @@ public class User extends Auditable<String> {
     @Column(name = "gender")
     private String gender;
     @Column(name = "username")
+    @NotBlank
     private String username;
     @Column(name = "password")
+    @NotBlank
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "roleId")
-    private Role role;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
 
-    public User(String firstname, String lastname, String fullname, String email, String phone, Date birthday, String gender, String username, String password) {
+    public User(String firstname, String lastname, String fullname, String email, String phone, Date birthday, String gender, String username, String password, Set<Role> roles) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.fullname = fullname;
@@ -53,6 +59,7 @@ public class User extends Auditable<String> {
         this.gender = gender;
         this.username = username;
         this.password = password;
+        this.roles = roles;
     }
 
     public String getId() {
@@ -135,11 +142,11 @@ public class User extends Auditable<String> {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

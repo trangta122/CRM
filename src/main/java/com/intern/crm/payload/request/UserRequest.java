@@ -1,14 +1,11 @@
 package com.intern.crm.payload.request;
 
 import com.intern.crm.entity.Role;
-import jakarta.validation.constraints.NotBlank;
 
-import javax.xml.crypto.Data;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
-public class CreateUserRequest {
+public class UserRequest {
     private String firstname;
     private String lastname;
     private String fullname;
@@ -18,7 +15,7 @@ public class CreateUserRequest {
     private String gender;
     private String username;
     private String password;
-    private Role role;
+    private Set<String> role;
 
     public String getFirstname() {
         return firstname;
@@ -92,11 +89,11 @@ public class CreateUserRequest {
         this.password = password;
     }
 
-    public Role getRole() {
+    public Set<String> getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(Set<String> role) {
         this.role = role;
     }
 }

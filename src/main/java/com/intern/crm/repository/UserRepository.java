@@ -18,9 +18,4 @@ public interface UserRepository extends JpaRepository<User, String> {
     Boolean existsByEmail(String email);
     Page<User> findAll(Pageable pageable);
     Page<User> findByEmailContaining(String email, Pageable pageable);
-
-    @Transactional
-    void deleteByRoleId(String roleId); //delete all Users of a Role specified by roleId
-
-    List<User> findByRoleId(String roleId); //returns all Users of a Role specified by roleId
 }

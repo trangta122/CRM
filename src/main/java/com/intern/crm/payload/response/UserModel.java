@@ -1,8 +1,8 @@
 package com.intern.crm.payload.response;
 
-import com.intern.crm.entity.Role;
 
 import java.util.Date;
+import java.util.Set;
 
 public class UserModel {
     private String id;
@@ -14,7 +14,7 @@ public class UserModel {
     private Date birthday;
     private String gender;
     private String username;
-    private Role role;
+    private Set<String> role;
     private String createdBy;
     private Date createdDate;
     private String lastModifiedBy;
@@ -94,11 +94,11 @@ public class UserModel {
         this.username = username;
     }
 
-    public Role getRole() {
+    public Set<String> getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(Set<String> role) {
         this.role = role;
     }
 }

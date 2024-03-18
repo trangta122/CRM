@@ -19,8 +19,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
     private ModelMapper modelMapper;
 
     @Override
@@ -39,25 +37,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel updateUser(UserModel userModel, String id) {
-        User userMatchingID = userRepository.findById(id).get();
-        userMatchingID.setFirstname(userModel.getFirstname());
-        userMatchingID.setLastname(userModel.getLastname());
-        userMatchingID.setEmail(userModel.getEmail());
-        userMatchingID.setPhone(userModel.getPhone());
-        userMatchingID.setBirthday(userModel.getBirthday());
-        userMatchingID.setGender(userModel.getGender());
-        userMatchingID.setLastModifiedDate(new Date());
-        userMatchingID.setRole(userModel.getRole());
-        //without setting role name
-        userRepository.save(userMatchingID);
-        UserModel user = modelMapper.map(userMatchingID, UserModel.class);
-        return user;
+        User u = userRepository.findById(id).get();
+        u.setFirstname(userModel.getFirstname());
+        u.setLastname(userModel.getLastname());
+        u.setEmail(userModel.getEmail());
+        u.setPhone(userModel.getPhone());
+        u.setBirthday(userModel.getBirthday());
+        u.setGender(userModel.getGender());
+        u.setUsername(userModel.getUsername());
+        u.setLastModifiedDate(new Date());
+        userRepository.save(u);
+        UserModel userModel1 = modelMapper.map(u, UserModel.class);
+        return userModel1;
     }
 
-    @Override
-    public void deleteUser(String id) {
-        userRepository.deleteById(id);
-    }
+//    @Override
+//    public void deleteUser(String id) {
+//        userRepository.deleteById(id);
+//    }
 
     @Override
     public Page<User> findAll(Pageable pageable) {
@@ -66,10 +63,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<User> findByEmailContaining(String email, Pageable pageable) {
         return userRepository.findByEmailContaining(email, pageable);
-    }
-
-    @Override
-    public List<UserModel> findByRoleId(Integer id) {
-        return null;
     }
 }

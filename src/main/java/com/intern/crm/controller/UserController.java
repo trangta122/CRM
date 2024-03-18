@@ -1,8 +1,9 @@
 package com.intern.crm.controller;
 
+import com.intern.crm.entity.ERole;
 import com.intern.crm.entity.Role;
 import com.intern.crm.entity.User;
-import com.intern.crm.payload.request.CreateUserRequest;
+import com.intern.crm.payload.request.UserRequest;
 import com.intern.crm.payload.response.MessageResponse;
 import com.intern.crm.payload.response.UserModel;
 import com.intern.crm.repository.RoleRepository;
@@ -10,7 +11,6 @@ import com.intern.crm.repository.UserRepository;
 import com.intern.crm.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,12 +19,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Tag(name = "User", description = "User Management APIs")
+//@SecurityRequirement(name = "Authorization")
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -34,40 +36,14 @@ public class UserController {
     UserRepository userRepository;
     @Autowired
     RoleRepository roleRepository;
-//    @Autowired
-//    PasswordEncoder passwordEncoder;
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Autowired
     ModelMapper modelMapper;
 
-
-//        //create new user's account
-//        User user = new User(
-//                createUserRequest.getFirstname(),
-//                createUserRequest.getLastname(),
-//                createUserRequest.getLastname() + " " + createUserRequest.getFirstname(),
-//                createUserRequest.getEmail(),
-//                createUserRequest.getPhone(),
-//                createUserRequest.getBirthday(),
-//                createUserRequest.getGender(),
-//                createUserRequest.getUsername(),
-//                createUserRequest.getPassword());
-//
-//        userRepository.save(user);
-//
-//        return ResponseEntity.ok(new MessageResponse("Create user successfully!"));
-//    }
-    //retrieve all User of a Role specified by ID
-
-//    @PostMapping("/{roleId}/users")
-//    public ResponseEntity<User> createUser(@PathVariable(value = "roleId") String roleId, @RequestBody User user) {
-//        Optional<Object> u = roleRepository.findById(roleId).map(role -> {
-//            user.setRole(role);
-//            return userRepository.save(user);
-//        });
-//        return new ResponseEntity<>(user, HttpStatus.OK);
-//    }
-    @PostMapping("/{roleId}/user")
-    public ResponseEntity<?> createUser(@PathVariable(value = "roleId") String roleId, @RequestBody CreateUserRequest userRequest) {
+    @Operation(summary = "ADMIN: Create a new user")
+    @PostMapping("")
+    public ResponseEntity<?> createUser(@RequestBody UserRequest userRequest) {
         if (userRepository.existsByUsername(userRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
@@ -80,10 +56,34 @@ public class UserController {
                     .body(new MessageResponse("Error: Email is already taken."));
         }
 
-        Optional<CreateUserRequest> u = roleRepository.findById(roleId).map(role -> {userRequest.setRole(role);
-            return userRequest;
-        });
-        User user = modelMapper.map(u, User.class);
+        User user = modelMapper.map(userRequest, User.class);
+
+        Set<String> strRoles = userRequest.getRole();
+        Set<Role> roles = new HashSet<>();
+
+        if (strRoles == null) {
+            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(adminRole);
+
+                        break;
+                    default:
+                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(userRole);
+                }
+            });
+        }
+
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        user.setRoles(roles);
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("Create user successfully!"));
     }
@@ -106,13 +106,6 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserModel> editUser(@RequestBody UserModel user, @PathVariable("id") String id) {
         return new ResponseEntity<UserModel>(userService.updateUser(user, id), HttpStatus.OK);
-    }
-
-    @Operation(summary = "ADMIN: Delete a user by ID")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") String id) {
-        userService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Operation(summary = "ADMIN: Paging, Sort & Filter")
@@ -149,4 +142,22 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Operation(summary = "ADMIN: List roles")
+    @GetMapping("/role")
+    public List<Role> getAll() {
+        return roleRepository.findAll();
+    }
+
+    @GetMapping("/test/users")
+    public ResponseEntity<?> testUserPermission() {
+        return ResponseEntity.ok(new MessageResponse("Role user allowed. Test for user role permission."));
+    }
+
+    //    @Operation(summary = "ADMIN: Delete a user by ID")
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") String id) {
+//        userService.deleteUser(id);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
 }
