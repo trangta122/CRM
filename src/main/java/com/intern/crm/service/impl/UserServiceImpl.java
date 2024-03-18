@@ -44,7 +44,6 @@ public class UserServiceImpl implements UserService {
         u.setPhone(userModel.getPhone());
         u.setBirthday(userModel.getBirthday());
         u.setGender(userModel.getGender());
-        u.setUsername(userModel.getUsername());
         u.setLastModifiedDate(new Date());
         userRepository.save(u);
         UserModel userModel1 = modelMapper.map(u, UserModel.class);
