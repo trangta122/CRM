@@ -44,7 +44,6 @@ public class UserController {
     ModelMapper modelMapper;
 
     @Operation(summary = "ADMIN: Create a new user")
-    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
     public ResponseEntity<?> createUser(@RequestBody UserRequest userRequest) {
         if (userRepository.existsByUsername(userRequest.getUsername())) {
@@ -92,7 +91,6 @@ public class UserController {
     }
     @Operation(summary = "ADMIN: Find all users",
                 description = "List all users with id, firstname, lastname, fullname, email, phone, birthday, gender, username and role. Only admin can do this.")
-    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<UserModel>> getAllUsers() {
         List<UserModel> userResponseList = userService.findAllUsers();
@@ -148,13 +146,12 @@ public class UserController {
     }
 
     @Operation(summary = "ADMIN: List roles")
-    @GetMapping("/role")
+    @GetMapping("/test/roles")
     public List<Role> getAll() {
         return roleRepository.findAll();
     }
 
     @GetMapping("/test/users")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> testUserPermission() {
         return ResponseEntity.ok(new MessageResponse("Role user allowed. Test for user role permission."));
     }
