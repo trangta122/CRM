@@ -5,7 +5,7 @@ import com.intern.crm.entity.Role;
 import com.intern.crm.entity.User;
 import com.intern.crm.payload.request.UserRequest;
 import com.intern.crm.payload.response.MessageResponse;
-import com.intern.crm.payload.response.UserModel;
+import com.intern.crm.payload.model.UserModel;
 import com.intern.crm.repository.RoleRepository;
 import com.intern.crm.repository.UserRepository;
 import com.intern.crm.service.UserService;
@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 

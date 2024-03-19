@@ -1,8 +1,7 @@
 package com.intern.crm.service.impl;
 
 import com.intern.crm.entity.User;
-import com.intern.crm.payload.response.UserModel;
-import com.intern.crm.repository.RoleRepository;
+import com.intern.crm.payload.model.UserModel;
 import com.intern.crm.repository.UserRepository;
 import com.intern.crm.service.UserService;
 import org.modelmapper.ModelMapper;

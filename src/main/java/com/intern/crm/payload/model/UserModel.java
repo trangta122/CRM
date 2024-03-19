@@ -1,5 +1,7 @@
-package com.intern.crm.payload.response;
+package com.intern.crm.payload.model;
 
+
+import com.intern.crm.entity.Role;
 
 import java.util.Date;
 import java.util.Set;

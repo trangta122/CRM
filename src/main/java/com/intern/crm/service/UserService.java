@@ -1,7 +1,7 @@
 package com.intern.crm.service;
 
 import com.intern.crm.entity.User;
-import com.intern.crm.payload.response.UserModel;
+import com.intern.crm.payload.model.UserModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
