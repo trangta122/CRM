@@ -1,23 +1,13 @@
-package com.intern.crm.payload.model;
+package com.intern.crm.payload.request;
 
-public class OpportunityModel {
-    private String id;
-    private String name;
+public class CreateOpportunityRequest {
+    private String name; //company name
     private String email;
     private String phone;
     private String address;
     private String website;
-    private Double revenue;
-    private String stageId;
-    private String salespersonId;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    private Double revenue; //expected revenue
+    private Boolean isCustomer = false;
 
     public String getName() {
         return name;
@@ -67,19 +57,11 @@ public class OpportunityModel {
         this.revenue = revenue;
     }
 
-    public String getStageId() {
-        return stageId;
+    public Boolean getCustomer() {
+        return isCustomer;
     }
 
-    public void setStageId(String stageId) {
-        this.stageId = stageId;
-    }
-
-    public String getSalespersonId() {
-        return salespersonId;
-    }
-
-    public void setSalespersonId(String salespersonId) {
-        this.salespersonId = salespersonId;
+    public void setCustomer(Boolean customer) {
+        isCustomer = customer;
     }
 }
