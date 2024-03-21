@@ -1,5 +1,6 @@
 package com.intern.crm.service.impl;
 
+import com.intern.crm.entity.Role;
 import com.intern.crm.entity.User;
 import com.intern.crm.payload.model.UserModel;
 import com.intern.crm.repository.UserRepository;
@@ -23,14 +24,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserModel> findAllUsers() {
         List<User> users = userRepository.findAll();
-
-            return users.stream().map(u -> modelMapper.map(u, UserModel.class)).collect(Collectors.toList());
+        List<UserModel> userModels = new ArrayList<>();
+        for (User user: users){
+            UserModel userModel = modelMapper.map(user,UserModel.class);
+            List<String> roles = (user.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList()));
+            userModel.setRole(roles);
+            userModels.add(userModel);
+        }
+            return userModels;
     }
 
     @Override
     public Optional<UserModel> findUserById(String id) {
         Optional<User> existsUser = userRepository.findById(id);
         UserModel userResponse = modelMapper.map(existsUser, UserModel.class);
+        List<String> roles = userRepository.findById(id).get().getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList());
+        userResponse.setRole(roles);
         return Optional.ofNullable(userResponse);
     }
 

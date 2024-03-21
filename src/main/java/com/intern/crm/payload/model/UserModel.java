@@ -4,6 +4,7 @@ package com.intern.crm.payload.model;
 import com.intern.crm.entity.Role;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public class UserModel {
@@ -16,7 +17,7 @@ public class UserModel {
     private Date birthday;
     private String gender;
     private String username;
-    private Set<String> role;
+    private List<String> roles;
     private String createdBy;
     private Date createdDate;
     private String lastModifiedBy;
@@ -96,11 +97,11 @@ public class UserModel {
         this.username = username;
     }
 
-    public Set<String> getRole() {
-        return role;
+    public List<String> getRoles() {
+        return roles;
     }
 
-    public void setRole(Set<String> role) {
-        this.role = role;
+    public void setRole(List<String> roles) {
+        this.roles = roles;
     }
 }

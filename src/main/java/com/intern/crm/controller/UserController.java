@@ -130,10 +130,17 @@ public class UserController {
             }
 
             users = pageUsers.getContent();
-            List<UserModel> userResponseList = users.stream().map(u -> modelMapper.map(u, UserModel.class)).collect(Collectors.toList());
+
+            List<UserModel> userModelList = new ArrayList<>();
+            for (User u : users) {
+                UserModel userModel = modelMapper.map(u, UserModel.class);
+                List<String> roles = u.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList());
+                userModel.setRole(roles);
+                userModelList.add(userModel);
+            }
 
             Map<String, Object> response = new HashMap<>();
-            response.put("users", userResponseList);
+            response.put("users", userModelList);
             response.put("currentPage", pageUsers.getNumber());
             response.put("totalItems", pageUsers.getTotalElements());
             response.put("totalPages", pageUsers.getTotalPages());

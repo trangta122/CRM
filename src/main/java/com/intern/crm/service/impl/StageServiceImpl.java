@@ -45,4 +45,9 @@ public class StageServiceImpl implements StageService {
         StageModel sM = modelMapper.map(stage, StageModel.class);
         return sM;
     }
+
+    @Override
+    public void deleteStageById(String id) {
+        stageRepository.deleteById(id);
+    }
 }

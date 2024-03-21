@@ -11,4 +11,5 @@ public interface StageService {
     Optional<StageModel> getStageById(String id);
 
     StageModel editStage(String id, StageModel stageModel);
+    void deleteStageById(String id);
 }

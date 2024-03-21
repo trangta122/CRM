@@ -1,5 +1,6 @@
 package com.intern.crm.audit;
 
+import com.intern.crm.security.service.UserDetailsImpl;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,6 @@ public class AuditorAwareImpl implements AuditorAware<String> {
         if (authentication == null || !authentication.isAuthenticated()) {
             return null;
         }
-        return ((UserDetails) authentication.getPrincipal()).getUsername().describeConstable();
+        return ((UserDetailsImpl) authentication.getPrincipal()).getId().describeConstable();
     }
 }

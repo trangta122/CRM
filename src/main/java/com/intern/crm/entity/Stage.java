@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "stages")
 @EntityListeners(AuditingEntityListener.class)
@@ -13,6 +15,8 @@ public class Stage extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+    private String code = String.valueOf(UUID.randomUUID());
 
     @NotBlank
     private String name;
