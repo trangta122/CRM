@@ -1,13 +1,12 @@
 package com.intern.crm.configuration;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class UserModelMapper {
+public class ModelMapper {
     @Bean
-    public ModelMapper modelMapperBean() {
-        return new ModelMapper();
+    public org.modelmapper.ModelMapper modelMapperBean() {
+        return new org.modelmapper.ModelMapper();
     }
 }

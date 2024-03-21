@@ -3,7 +3,7 @@ package com.intern.crm.controller;
 import com.intern.crm.entity.ERole;
 import com.intern.crm.entity.Role;
 import com.intern.crm.entity.User;
-import com.intern.crm.payload.request.UserRequest;
+import com.intern.crm.payload.request.CreateUserRequest;
 import com.intern.crm.payload.response.MessageResponse;
 import com.intern.crm.payload.model.UserModel;
 import com.intern.crm.repository.RoleRepository;
@@ -44,7 +44,7 @@ public class UserController {
 
     @Operation(summary = "ADMIN: Create a new user")
     @PostMapping("")
-    public ResponseEntity<?> createUser(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<?> createUser(@RequestBody CreateUserRequest userRequest) {
         if (userRepository.existsByUsername(userRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()

@@ -1,11 +1,9 @@
 package com.intern.crm.payload.request;
 
-import com.intern.crm.entity.Role;
-
 import java.util.Date;
 import java.util.Set;
 
-public class UserRequest {
+public class CreateUserRequest {
     private String firstname;
     private String lastname;
     private String fullname;
