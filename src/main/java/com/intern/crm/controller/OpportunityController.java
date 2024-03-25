@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 @Tag(name = "Opportunity", description = "Opportunity Management APIs")
-//@SecurityRequirement(name = "Authorization")
+@SecurityRequirement(name = "Authorization")
 @RestController
 @RequestMapping("/opportunity")
 public class OpportunityController {
@@ -111,4 +112,24 @@ public class OpportunityController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Operation(summary = "Edit information, convert stage")
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateOpportunity(
+            @PathVariable("id") String opportunityId,
+            @RequestBody OpportunityModel opportunityModel,
+            @RequestParam(value = "stageId", required = false) String stageId) {
+        return ResponseEntity.status(HttpStatus.OK).body(opportunityService.updateOpportunity(opportunityModel, opportunityId, stageId));
+    }
+
+    @Operation(summary = "ADMIN: Assign salesperson")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{opportunityId}/salesperson/{salespersonId}")
+    public ResponseEntity<?> assignSalesperson(
+            @PathVariable("opportunityId") String id1,
+            @PathVariable("salespersonId") String id2
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(opportunityService.assignSalesperson(id1, id2));
+    }
+
 }

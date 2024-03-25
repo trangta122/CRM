@@ -2,7 +2,6 @@ package com.intern.crm.service.impl;
 
 import com.intern.crm.entity.Opportunity;
 import com.intern.crm.entity.Stage;
-import com.intern.crm.entity.User;
 import com.intern.crm.helper.ExcelHelper;
 import com.intern.crm.payload.model.OpportunityModel;
 import com.intern.crm.payload.request.CreateOpportunityRequest;
@@ -12,13 +11,12 @@ import com.intern.crm.repository.UserRepository;
 import com.intern.crm.service.OpportunityService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -64,12 +62,38 @@ public class OpportunityServiceImpl implements OpportunityService {
         return opportunityModels;
     }
 
-
     @Override
     public OpportunityModel findOpportunityById(String id) {
         Opportunity opportunity = opportunityRepository.findById(id).get();
         return setStageAndSalesperson(opportunity);
     }
+
+    @Override
+    public OpportunityModel updateOpportunity(OpportunityModel opportunityModel, String opportunityId, String stageId) {
+        Opportunity opportunity = opportunityRepository.findById(opportunityId).get();
+
+        opportunity.setName(opportunityModel.getName());
+        opportunity.setEmail(opportunityModel.getEmail());
+        opportunity.setPhone(opportunityModel.getPhone());
+        opportunity.setAddress(opportunityModel.getAddress());
+        opportunity.setWebsite(opportunityModel.getWebsite());
+        opportunity.setRevenue(opportunityModel.getRevenue());
+        opportunity.setLastModifiedDate(new Date());
+
+        opportunity.setStage(stageRepository.findById(stageId).get());
+        opportunityRepository.save(opportunity);
+        return setStageAndSalesperson(opportunity);
+    }
+
+    @Override
+    public OpportunityModel assignSalesperson(String opportunityId, String userId) {
+        Opportunity opportunity = opportunityRepository.findById(opportunityId).get();
+        opportunity.setSalesperson(userRepository.findById(userId).get());
+        opportunity.setLastModifiedDate(new Date());
+        opportunityRepository.save(opportunity);
+        return setStageAndSalesperson(opportunity);
+    }
+
 
     public OpportunityModel setStageAndSalesperson(Opportunity o) {
         OpportunityModel opportunityModel = modelMapper.map(o, OpportunityModel.class);
