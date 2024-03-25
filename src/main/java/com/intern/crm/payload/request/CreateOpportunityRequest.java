@@ -7,7 +7,6 @@ public class CreateOpportunityRequest {
     private String address;
     private String website;
     private Double revenue; //expected revenue
-    private Boolean isCustomer = false;
 
     public String getName() {
         return name;
@@ -57,11 +56,4 @@ public class CreateOpportunityRequest {
         this.revenue = revenue;
     }
 
-    public Boolean getCustomer() {
-        return isCustomer;
-    }
-
-    public void setCustomer(Boolean customer) {
-        isCustomer = customer;
-    }
 }

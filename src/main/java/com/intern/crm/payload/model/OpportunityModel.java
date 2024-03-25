@@ -8,6 +8,7 @@ public class OpportunityModel {
     private String address;
     private String website;
     private Double revenue;
+    private Boolean isCustomer;
     private String stageId;
     private String salespersonId;
 
@@ -65,6 +66,14 @@ public class OpportunityModel {
 
     public void setRevenue(Double revenue) {
         this.revenue = revenue;
+    }
+
+    public Boolean getCustomer() {
+        return isCustomer;
+    }
+
+    public void setCustomer(Boolean customer) {
+        isCustomer = customer;
     }
 
     public String getStageId() {

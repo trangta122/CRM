@@ -112,10 +112,10 @@ public class UserController {
     @Operation(summary = "ADMIN: Paging, Sort & Filter")
     @GetMapping("")
     public ResponseEntity<Map<String, Object>> getAllUsers(
-            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String email, //filter
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,
-            @RequestParam(defaultValue = "email") String sortBy
+            @RequestParam(defaultValue = "email") String sortBy //sort
     ) {
         try {
             List<User> users = new ArrayList<>();
