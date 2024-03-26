@@ -1,25 +1,50 @@
-package com.intern.crm.payload.model;
+package com.intern.crm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.intern.crm.audit.Auditable;
+import io.swagger.v3.oas.annotations.tags.Tags;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.intern.crm.entity.Role;
-
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-public class UserModel {
+@Entity
+@Table(name = "contacts")
+@EntityListeners(AuditingEntityListener.class)
+public class Contact extends Auditable<String> {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String firstname;
     private String lastname;
     private String fullname;
+    @Email
     private String email;
     private String phone;
     private Date birthday;
     private String gender;
-    private String username;
-    private List<String> roles;
 
-    //getter & setter
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE}, mappedBy = "contacts")
+    @JsonIgnore
+    private List<Opportunity> opportunities = new ArrayList<>();
+
+    public Contact() {
+    }
+
+    public Contact(String firstname, String lastname, String fullname, String email, String phone, Date birthday, String gender) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.fullname = fullname;
+        this.email = email;
+        this.phone = phone;
+        this.birthday = birthday;
+        this.gender = gender;
+    }
 
     public String getId() {
         return id;
@@ -85,19 +110,11 @@ public class UserModel {
         this.gender = gender;
     }
 
-    public String getUsername() {
-        return username;
+    public List<Opportunity> getOpportunities() {
+        return opportunities;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public void setRole(List<String> roles) {
-        this.roles = roles;
+    public void setOpportunities(List<Opportunity> opportunities) {
+        this.opportunities = opportunities;
     }
 }

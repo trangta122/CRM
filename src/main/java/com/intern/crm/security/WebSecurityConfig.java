@@ -62,6 +62,7 @@ public class WebSecurityConfig {
                                 .requestMatchers( "/user/**").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers("/stage/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                                 .requestMatchers("/opportunity/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                                .requestMatchers("/contact/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                                 .anyRequest().authenticated()
                 );
 

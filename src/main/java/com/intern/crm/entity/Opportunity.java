@@ -4,6 +4,8 @@ import com.intern.crm.audit.Auditable;
 import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -26,6 +28,20 @@ public class Opportunity extends Auditable<String> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User salesperson;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "opportunity_contacts",
+    joinColumns = { @JoinColumn(name = "opportunity_Id")},
+    inverseJoinColumns = {@JoinColumn(name = "contact_Id")})
+    private List<Contact> contacts = new ArrayList<>();
+
+    public void addContact(Contact contact) {
+        this.contacts.add(contact);
+        contact.getOpportunities().add(this);
+    }
 
     public Opportunity() {
     }
@@ -118,5 +134,13 @@ public class Opportunity extends Auditable<String> {
 
     public void setSalesperson(User salesperson) {
         this.salesperson = salesperson;
+    }
+
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
     }
 }

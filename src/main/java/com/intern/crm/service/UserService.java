@@ -17,7 +17,4 @@ public interface UserService {
 
     //void deleteUser(String id);
 
-    Page<User> findAll(Pageable pageable);
-
-    Page<User> findByEmailContaining(String email, Pageable pageable);
 }
