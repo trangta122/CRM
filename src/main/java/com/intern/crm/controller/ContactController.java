@@ -54,7 +54,7 @@ public class ContactController {
     @Operation(summary = "Pagination, Sort & Filter")
     @GetMapping("")
     public ResponseEntity<?> getAllContacts(
-            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String email, //filter
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "email") String sortBy
