@@ -7,6 +7,7 @@ public class OpportunityModel {
     private String phone;
     private String address;
     private String website;
+    private String description;
     private Double revenue;
     private Boolean isCustomer;
     private String stageId;
@@ -58,6 +59,14 @@ public class OpportunityModel {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Double getRevenue() {

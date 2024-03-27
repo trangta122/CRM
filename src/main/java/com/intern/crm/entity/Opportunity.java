@@ -18,6 +18,7 @@ public class Opportunity extends Auditable<String> {
     private String phone;
     private String address;
     private String website;
+    private String description;
     private Double revenue; //expected revenue
     private Boolean isCustomer = false;
 
@@ -30,12 +31,13 @@ public class Opportunity extends Auditable<String> {
     public Opportunity() {
     }
 
-    public Opportunity(String name, String email, String phone, String address, String website, Double revenue, Boolean isCustomer) {
+    public Opportunity(String name, String email, String phone, String address, String website, String description, Double revenue, Boolean isCustomer) {
         this.name = name;
         this.email = email;
         this.phone = phone;
         this.address = address;
         this.website = website;
+        this.description = description;
         this.revenue = revenue;
         this.isCustomer = isCustomer;
     }
@@ -86,6 +88,14 @@ public class Opportunity extends Auditable<String> {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Double getRevenue() {
