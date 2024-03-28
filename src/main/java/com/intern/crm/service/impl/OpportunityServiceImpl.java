@@ -77,6 +77,7 @@ public class OpportunityServiceImpl implements OpportunityService {
         opportunity.setPhone(opportunityModel.getPhone());
         opportunity.setAddress(opportunityModel.getAddress());
         opportunity.setWebsite(opportunityModel.getWebsite());
+        opportunity.setDescription(opportunityModel.getDescription());
         opportunity.setRevenue(opportunityModel.getRevenue());
         opportunity.setLastModifiedDate(new Date());
 
