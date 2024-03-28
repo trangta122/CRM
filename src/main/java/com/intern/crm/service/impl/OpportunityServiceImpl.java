@@ -72,6 +72,12 @@ public class OpportunityServiceImpl implements OpportunityService {
     public OpportunityModel updateOpportunity(OpportunityModel opportunityModel, String opportunityId, String stageId) {
         Opportunity opportunity = opportunityRepository.findById(opportunityId).get();
 
+        //update stage's revenue
+        Stage stage = stageRepository.findById(opportunity.getStage().getId()).get();
+        stage.setRevenue(stage.getRevenue() + opportunityModel.getRevenue() - opportunity.getRevenue());
+        stage.setLastModifiedDate(new Date());
+        stageRepository.save(stage);
+
         opportunity.setName(opportunityModel.getName());
         opportunity.setEmail(opportunityModel.getEmail());
         opportunity.setPhone(opportunityModel.getPhone());
@@ -83,6 +89,7 @@ public class OpportunityServiceImpl implements OpportunityService {
 
         opportunity.setStage(stageRepository.findById(stageId).get());
         opportunityRepository.save(opportunity);
+
         return setStageAndSalesperson(opportunity);
     }
 
