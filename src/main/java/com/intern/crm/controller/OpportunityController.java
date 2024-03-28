@@ -132,4 +132,9 @@ public class OpportunityController {
         return ResponseEntity.status(HttpStatus.OK).body(opportunityService.assignSalesperson(id1, id2));
     }
 
+    @Operation(summary = "Retrieve all opportunities of an contact")
+    @GetMapping("/contact/{id}")
+    public ResponseEntity<?> getAllOpportunitiesByContactId(@PathVariable("id") String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(opportunityService.findOpportunityByContactId(id));
+    }
 }

@@ -24,7 +24,6 @@ public class Stage extends Auditable<String> {
     private Double revenue; //total expected revenue group by StageID
 
     //constructor
-
     public Stage() {
     }
 

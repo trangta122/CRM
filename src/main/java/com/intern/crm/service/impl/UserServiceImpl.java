@@ -46,15 +46,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserModel updateUser(UserModel userModel, String id) {
         User u = userRepository.findById(id).get();
+
         u.setFirstname(userModel.getFirstname());
         u.setLastname(userModel.getLastname());
+        u.setFullname(userModel.getLastname() + " " + userModel.getFirstname());
         u.setEmail(userModel.getEmail());
         u.setPhone(userModel.getPhone());
         u.setBirthday(userModel.getBirthday());
         u.setGender(userModel.getGender());
         u.setLastModifiedDate(new Date());
+
         userRepository.save(u);
         UserModel userModel1 = modelMapper.map(u, UserModel.class);
+        userModel1.setRole(userModel.getRoles());
         return userModel1;
     }
 
@@ -63,12 +67,4 @@ public class UserServiceImpl implements UserService {
 //        userRepository.deleteById(id);
 //    }
 
-    @Override
-    public Page<User> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
-    }
-    @Override
-    public Page<User> findByEmailContaining(String email, Pageable pageable) {
-        return userRepository.findByEmailContaining(email, pageable);
-    }
 }

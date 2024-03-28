@@ -95,6 +95,17 @@ public class OpportunityServiceImpl implements OpportunityService {
         return setStageAndSalesperson(opportunity);
     }
 
+    @Override
+    public List<OpportunityModel> findOpportunityByContactId(String id) {
+        List<Opportunity> opportunities = opportunityRepository.findOpportunityByContactsId(id);
+        List<OpportunityModel> opportunityModels = new ArrayList<>();
+
+        for (Opportunity opportunity : opportunities) {
+            opportunityModels.add(setStageAndSalesperson(opportunity));
+        }
+        return opportunityModels;
+    }
+
 
     public OpportunityModel setStageAndSalesperson(Opportunity o) {
         OpportunityModel opportunityModel = modelMapper.map(o, OpportunityModel.class);

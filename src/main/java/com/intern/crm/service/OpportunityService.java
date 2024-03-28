@@ -23,5 +23,9 @@ public interface OpportunityService {
     //update: edit information, convert stage
     OpportunityModel updateOpportunity(OpportunityModel opportunity, String opportunityId, String stageId);
 
+    //Assign user (salesperson) to take care of opportunity
     OpportunityModel assignSalesperson(String opportunityId, String userId);
+
+    //Retrieve all opportunities of a contact;
+    List<OpportunityModel> findOpportunityByContactId(String id);
 }

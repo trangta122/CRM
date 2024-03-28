@@ -1,25 +1,21 @@
 package com.intern.crm.payload.model;
 
-
-import com.intern.crm.entity.Role;
+import jakarta.validation.constraints.Email;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-public class UserModel {
+public class ContactModel {
     private String id;
     private String firstname;
     private String lastname;
     private String fullname;
+    @Email
     private String email;
     private String phone;
     private Date birthday;
     private String gender;
-    private String username;
-    private List<String> roles;
-
-    //getter & setter
+    private List<String> opportunityIds;
 
     public String getId() {
         return id;
@@ -46,7 +42,7 @@ public class UserModel {
     }
 
     public String getFullname() {
-        return lastname + " " + firstname;
+        return fullname;
     }
 
     public void setFullname(String fullname) {
@@ -85,19 +81,11 @@ public class UserModel {
         this.gender = gender;
     }
 
-    public String getUsername() {
-        return username;
+    public List<String> getOpportunityIds() {
+        return opportunityIds;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public void setRole(List<String> roles) {
-        this.roles = roles;
+    public void setOpportunityIds(List<String> opportunityIds) {
+        this.opportunityIds = opportunityIds;
     }
 }
