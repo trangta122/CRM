@@ -1,14 +1,19 @@
 package com.intern.crm.service.impl;
 
+import com.intern.crm.entity.Opportunity;
 import com.intern.crm.entity.Stage;
+import com.intern.crm.payload.model.OpportunityDisplay;
+import com.intern.crm.payload.model.OpportunityModel;
 import com.intern.crm.payload.model.StageModel;
 import com.intern.crm.payload.model.UserModel;
+import com.intern.crm.repository.OpportunityRepository;
 import com.intern.crm.repository.StageRepository;
 import com.intern.crm.service.StageService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +23,8 @@ import java.util.stream.Collectors;
 public class StageServiceImpl implements StageService {
     @Autowired
     StageRepository stageRepository;
+    @Autowired
+    OpportunityRepository opportunityRepository;
     @Autowired
     ModelMapper modelMapper;
     @Override
@@ -49,5 +56,18 @@ public class StageServiceImpl implements StageService {
     @Override
     public void deleteStageById(String id) {
         stageRepository.deleteById(id);
+    }
+
+    @Override
+    public List<OpportunityDisplay> getOpportunitiesByStageId(String id) {
+        List<Opportunity> opportunities = opportunityRepository.findByStageId(id);
+        List<OpportunityDisplay> opportunityDisplays = new ArrayList<>();
+
+        for (Opportunity opportunity : opportunities) {
+            OpportunityDisplay opportunityDisplay = modelMapper.map(opportunity, OpportunityDisplay.class);
+            opportunityDisplay.setSalesperson(opportunity.getSalesperson().getFirstname() + " " + opportunity.getSalesperson().getLastname());
+            opportunityDisplays.add(opportunityDisplay);
+        }
+        return opportunityDisplays;
     }
 }

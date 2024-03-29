@@ -15,4 +15,6 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, String
     Page<Opportunity> findByEmailContaining(String email, Pageable pageable);
 
     List<Opportunity> findOpportunityByContactsId(String id);
+
+    List<Opportunity> findByStageId(String id);
 }
