@@ -68,4 +68,10 @@ public class StageController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new MessageResponse("Delete stage successfully."));
     }
 
+    @Operation(summary = "Retrieve all opportunities of a stage by Stage's ID")
+    @GetMapping("/{id}/opportunities")
+    public ResponseEntity<?> getAllOpportunitiesByStageId(@PathVariable("id") String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(stageService.getOpportunitiesByStageId(id));
+    }
+
 }
