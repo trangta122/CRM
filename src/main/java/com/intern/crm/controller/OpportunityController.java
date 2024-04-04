@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "*")
 @Tag(name = "Opportunity", description = "Opportunity Management APIs")
 @SecurityRequirement(name = "Authorization")
 @RestController

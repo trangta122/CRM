@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-
+@CrossOrigin(origins = "*")
 @Tag(name = "Activity", description = "Activity Management APIs")
 @SecurityRequirement(name = "Authorization")
 @RestController

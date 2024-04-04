@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
+@CrossOrigin(origins = "*")
 @Tag(name = "User", description = "User Management APIs")
 @SecurityRequirement(name = "Authorization")
 @RestController
