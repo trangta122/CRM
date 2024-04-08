@@ -1,5 +1,7 @@
 package com.intern.crm.payload.model;
 
+import com.intern.crm.entity.EPriority;
+
 public class OpportunityModel {
     private String id;
     private String name;
@@ -10,8 +12,9 @@ public class OpportunityModel {
     private String description;
     private Double revenue;
     private Boolean isCustomer;
-    private String stageId;
-    private String salespersonId;
+    private EPriority priority;
+    private String stage;
+    private String salesperson;
 
     public String getId() {
         return id;
@@ -85,19 +88,27 @@ public class OpportunityModel {
         isCustomer = customer;
     }
 
-    public String getStageId() {
-        return stageId;
+    public String getStage() {
+        return stage;
     }
 
-    public void setStageId(String stageId) {
-        this.stageId = stageId;
+    public void setStage(String stage) {
+        this.stage = stage;
     }
 
-    public String getSalespersonId() {
-        return salespersonId;
+    public String getSalesperson() {
+        return salesperson;
     }
 
-    public void setSalespersonId(String salespersonId) {
-        this.salespersonId = salespersonId;
+    public void setSalesperson(String salesperson) {
+        this.salesperson = salesperson;
+    }
+
+    public EPriority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(EPriority priority) {
+        this.priority = priority;
     }
 }

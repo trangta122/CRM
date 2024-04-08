@@ -1,8 +1,5 @@
 package com.intern.crm.service;
 
-import com.intern.crm.entity.Opportunity;
-import com.intern.crm.entity.Stage;
-import com.intern.crm.payload.model.OpportunityDisplay;
 import com.intern.crm.payload.model.OpportunityModel;
 import com.intern.crm.payload.model.StageModel;
 
@@ -23,5 +20,5 @@ public interface StageService {
     void deleteStageById(String id);
 
     //List all opportunities of a stage by Stage's ID
-    List<OpportunityDisplay> getOpportunitiesByStageId(String id);
+    List<OpportunityModel> getOpportunitiesByStageId(String id);
 }

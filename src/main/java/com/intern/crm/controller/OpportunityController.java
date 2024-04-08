@@ -118,9 +118,8 @@ public class OpportunityController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOpportunity(
             @PathVariable("id") String opportunityId,
-            @RequestBody OpportunityModel opportunityModel,
-            @RequestParam(value = "stageId", required = false) String stageId) {
-        return ResponseEntity.status(HttpStatus.OK).body(opportunityService.updateOpportunity(opportunityModel, opportunityId, stageId));
+            @RequestBody OpportunityModel opportunityModel) {
+        return ResponseEntity.status(HttpStatus.OK).body(opportunityService.updateOpportunity(opportunityModel, opportunityId));
     }
 
     @Operation(summary = "ADMIN: Assign salesperson")

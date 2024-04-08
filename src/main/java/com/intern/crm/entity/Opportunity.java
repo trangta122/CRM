@@ -23,6 +23,7 @@ public class Opportunity extends Auditable<String> {
     private String description;
     private Double revenue; //expected revenue
     private Boolean isCustomer = false;
+    private EPriority priority;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Stage stage;
@@ -168,5 +169,13 @@ public class Opportunity extends Auditable<String> {
 
     public void setFiles(List<File> files) {
         this.files = files;
+    }
+
+    public EPriority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(EPriority priority) {
+        this.priority = priority;
     }
 }

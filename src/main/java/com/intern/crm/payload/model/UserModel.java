@@ -16,7 +16,6 @@ public class UserModel {
     private String phone;
     private Date birthday;
     private String gender;
-    private String username;
     private List<String> roles;
 
     //getter & setter
@@ -83,14 +82,6 @@ public class UserModel {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public List<String> getRoles() {

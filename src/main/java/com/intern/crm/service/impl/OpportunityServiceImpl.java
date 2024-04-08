@@ -69,14 +69,14 @@ public class OpportunityServiceImpl implements OpportunityService {
     }
 
     @Override
-    public OpportunityModel updateOpportunity(OpportunityModel opportunityModel, String opportunityId, String stageId) {
+    public OpportunityModel updateOpportunity(OpportunityModel opportunityModel, String opportunityId) {
         Opportunity opportunity = opportunityRepository.findById(opportunityId).get();
 
         //update stage's revenue
-        Stage stage = stageRepository.findById(opportunity.getStage().getId()).get();
-        stage.setRevenue(stage.getRevenue() + opportunityModel.getRevenue() - opportunity.getRevenue());
-        stage.setLastModifiedDate(new Date());
-        stageRepository.save(stage);
+//        Stage stage = stageRepository.findById(opportunity.getStage().getId()).get();
+//        stage.setRevenue(stage.getRevenue() + opportunityModel.getRevenue() - opportunity.getRevenue());
+//        stage.setLastModifiedDate(new Date());
+//        stageRepository.save(stage);
 
         opportunity.setName(opportunityModel.getName());
         opportunity.setEmail(opportunityModel.getEmail());
@@ -86,8 +86,8 @@ public class OpportunityServiceImpl implements OpportunityService {
         opportunity.setDescription(opportunityModel.getDescription());
         opportunity.setRevenue(opportunityModel.getRevenue());
         opportunity.setLastModifiedDate(new Date());
-
-        opportunity.setStage(stageRepository.findById(stageId).get());
+        opportunity.setPriority(opportunityModel.getPriority());
+        opportunity.setStage(stageRepository.findById(opportunityModel.getStage()).get());
         opportunityRepository.save(opportunity);
 
         return setStageAndSalesperson(opportunity);
@@ -118,12 +118,12 @@ public class OpportunityServiceImpl implements OpportunityService {
         OpportunityModel opportunityModel = modelMapper.map(o, OpportunityModel.class);
 
         if (o.getStage() != null) {
-            opportunityModel.setStageId(o.getStage().getId());
-        } else opportunityModel.setStageId("");
+            opportunityModel.setStage(o.getStage().getId());
+        } else opportunityModel.setStage("");
 
         if (o.getSalesperson() != null) {
-            opportunityModel.setSalespersonId(o.getSalesperson().getId());
-        } else opportunityModel.setSalespersonId("");
+            opportunityModel.setSalesperson(o.getSalesperson().getId());
+        } else opportunityModel.setSalesperson("");
 
         return opportunityModel;
     }
