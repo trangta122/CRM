@@ -1,9 +1,13 @@
 package com.intern.crm.controller;
 
+import com.intern.crm.payload.request.ChangePasswordRequest;
 import com.intern.crm.payload.request.LoginRequest;
 import com.intern.crm.payload.response.JwtResponse;
 import com.intern.crm.security.jwt.JwtUtils;
 import com.intern.crm.security.service.UserDetailsImpl;
+import com.intern.crm.service.PasswordService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +28,11 @@ public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
+    PasswordService passwordService;
+    @Autowired
     JwtUtils jwtUtils;
+
+    @Operation(summary = "Sign in")
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -41,4 +49,11 @@ public class AuthController {
         return ResponseEntity
                 .ok(new JwtResponse(jwt));
     }
+    @SecurityRequirement(name = "Authorization")
+    @Operation(summary = "Change password")
+    @PutMapping("/password")
+    public String changePassword(@RequestBody ChangePasswordRequest request) {
+        return passwordService.changePassword(request);
+    }
+
 }

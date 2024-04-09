@@ -3,11 +3,13 @@ package com.intern.crm.controller;
 import com.intern.crm.entity.ERole;
 import com.intern.crm.entity.Role;
 import com.intern.crm.entity.User;
+import com.intern.crm.payload.request.ChangePasswordRequest;
 import com.intern.crm.payload.request.CreateUserRequest;
 import com.intern.crm.payload.response.MessageResponse;
 import com.intern.crm.payload.model.UserModel;
 import com.intern.crm.repository.RoleRepository;
 import com.intern.crm.repository.UserRepository;
+import com.intern.crm.service.PasswordService;
 import com.intern.crm.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +44,7 @@ public class UserController {
     PasswordEncoder passwordEncoder;
     @Autowired
     ModelMapper modelMapper;
+
 
     @Operation(summary = "ADMIN: Create a new user")
     @PostMapping("")
@@ -152,15 +156,12 @@ public class UserController {
     }
 
     @Operation(summary = "ADMIN: List roles")
-    @GetMapping("/test/roles")
+    @GetMapping("/roles")
     public List<Role> getAll() {
         return roleRepository.findAll();
     }
 
-    @GetMapping("/test/users")
-    public ResponseEntity<?> testUserPermission() {
-        return ResponseEntity.ok(new MessageResponse("Role user allowed. Test for user role permission."));
-    }
+
 
     //    @Operation(summary = "ADMIN: Delete a user by ID")
 //    @DeleteMapping("/{id}")
