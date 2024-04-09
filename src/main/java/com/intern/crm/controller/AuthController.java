@@ -1,6 +1,7 @@
 package com.intern.crm.controller;
 
 import com.intern.crm.payload.request.ChangePasswordRequest;
+import com.intern.crm.payload.request.ForgotPasswordRequest;
 import com.intern.crm.payload.request.LoginRequest;
 import com.intern.crm.payload.response.JwtResponse;
 import com.intern.crm.security.jwt.JwtUtils;
@@ -54,6 +55,12 @@ public class AuthController {
     @PutMapping("/password")
     public String changePassword(@RequestBody ChangePasswordRequest request) {
         return passwordService.changePassword(request);
+    }
+
+    @Operation(summary = "Forgot password")
+    @PutMapping("/reset-password")
+    public String forgotPassword(@RequestBody ForgotPasswordRequest request) {
+        return passwordService.forgotPassword(request);
     }
 
 }
