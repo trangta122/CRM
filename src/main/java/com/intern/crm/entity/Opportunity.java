@@ -6,7 +6,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Table(name = "opportunities")
@@ -41,14 +40,14 @@ public class Opportunity extends Auditable<String> {
     @JoinTable(name = "opportunity_files",
                 joinColumns = {@JoinColumn(name = "opportunity_id")},
                 inverseJoinColumns = {@JoinColumn(name = "file_id")})
-    private List<File> files = new ArrayList<>();
+    private List<Attachment> files = new ArrayList<>();
 
     public void addContact(Contact contact) {
         this.contacts.add(contact);
         contact.getOpportunities().add(this);
     }
 
-    public void addFile(File file) {
+    public void addFile(Attachment file) {
         this.files.add(file);
         file.getOpportunities().add(this);
     }
@@ -163,11 +162,11 @@ public class Opportunity extends Auditable<String> {
         this.contacts = contacts;
     }
 
-    public List<File> getFiles() {
+    public List<Attachment> getFiles() {
         return files;
     }
 
-    public void setFiles(List<File> files) {
+    public void setFiles(List<Attachment> files) {
         this.files = files;
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "files")
 @EntityListeners(EntityListeners.class)
-public class File extends Auditable<String> {
+public class Attachment extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -25,10 +25,10 @@ public class File extends Auditable<String> {
     private List<Opportunity> opportunities = new ArrayList<>();
 
     //constructor
-    public File() {
+    public Attachment() {
     }
 
-    public File(String name, String type, String physicalPath) {
+    public Attachment(String name, String type, String physicalPath) {
         this.name = name;
         this.type = type;
         this.physicalPath = physicalPath;

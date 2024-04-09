@@ -1,5 +1,6 @@
 package com.intern.crm.service.impl;
 
+import com.intern.crm.entity.Attachment;
 import com.intern.crm.payload.model.FileModel;
 import com.intern.crm.repository.FileRepository;
 import com.intern.crm.service.FileService;
@@ -35,7 +36,7 @@ public class FileServiceImpl implements FileService {
         String currentDateTime = dateFormatter.format(new Date());
         String path = currentDateTime + file.getOriginalFilename();
         saveAs(file, path );
-        com.intern.crm.entity.File f = new com.intern.crm.entity.File();
+        Attachment f = new Attachment();
         f.setName(file.getOriginalFilename());
         f.setType(file.getContentType());
         f.setPhysicalPath(path);
@@ -44,23 +45,23 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public Resource downloadFile(String id) throws Exception {
-        com.intern.crm.entity.File file = fileRepository.findById(id).orElseThrow(() -> new Exception("File not found"));
+        Attachment file = fileRepository.findById(id).orElseThrow(() -> new Exception("File not found"));
         return load(file.getPhysicalPath());
     }
 
     @Override
     public Map<String, Object> pagination(int page, int size, String sortBy) {
-        List<com.intern.crm.entity.File> files = new ArrayList<>();
+        List<Attachment> files = new ArrayList<>();
 
         Pageable paging = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-        Page<com.intern.crm.entity.File> filePage;
+        Page<Attachment> filePage;
 
         filePage = fileRepository.findAll(paging);
         files = filePage.getContent();
 
         List<FileModel> fileModels = new ArrayList<>();
 
-        for (com.intern.crm.entity.File file : files) {
+        for (Attachment file : files) {
             FileModel fileModel = modelMapper.map(file, FileModel.class);
             fileModels.add(fileModel);
         }
@@ -76,7 +77,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public FileModel getFileById(String id) {
-        com.intern.crm.entity.File file = fileRepository.findById(id).get();
+        Attachment file = fileRepository.findById(id).get();
         FileModel fileModel = modelMapper.map(file, FileModel.class);
         return fileModel;
     }
