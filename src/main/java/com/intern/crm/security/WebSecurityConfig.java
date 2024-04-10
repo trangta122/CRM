@@ -70,7 +70,7 @@ public class WebSecurityConfig {
                                 .requestMatchers( "/user/**").hasAnyAuthority("ROLE_ADMIN")
                                 .requestMatchers("/stage/**" , "/opportunity/**",
                                                             "/contact/**", "/activity/**",
-                                                            "/file/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                                                            "/file/**", "/avatar/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 //                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .anyRequest().authenticated());
 

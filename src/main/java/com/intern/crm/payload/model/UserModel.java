@@ -17,6 +17,7 @@ public class UserModel {
     private Date birthday;
     private String gender;
     private List<String> roles;
+    private String avatar;
 
     //getter & setter
 
@@ -45,7 +46,7 @@ public class UserModel {
     }
 
     public String getFullname() {
-        return lastname + " " + firstname;
+        return firstname + " " + lastname;
     }
 
     public void setFullname(String fullname) {
@@ -90,5 +91,13 @@ public class UserModel {
 
     public void setRole(List<String> roles) {
         this.roles = roles;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

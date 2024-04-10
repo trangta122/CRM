@@ -49,48 +49,7 @@ public class UserController {
     @Operation(summary = "ADMIN: Create a new user")
     @PostMapping("")
     public ResponseEntity<?> createUser(@RequestBody CreateUserRequest userRequest) {
-        if (userRepository.existsByUsername(userRequest.getUsername())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Username is already taken."));
-        }
-
-        if (userRepository.existsByEmail(userRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already taken."));
-        }
-
-        User user = modelMapper.map(userRequest, User.class);
-
-        Set<String> strRoles = userRequest.getRole();
-        Set<Role> roles = new HashSet<>();
-
-        if (strRoles == null) {
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminRole);
-
-                        break;
-                    default:
-                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(userRole);
-                }
-            });
-        }
-
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        user.setRoles(roles);
-        userRepository.save(user);
-        return ResponseEntity.ok(new MessageResponse("Create user successfully!"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userRequest));
     }
     @Operation(summary = "ADMIN: Find all users",
                 description = "List all users with id, firstname, lastname, fullname, email, phone, birthday, gender, username and role. Only admin can do this.")
@@ -103,7 +62,7 @@ public class UserController {
     @Operation(summary = "ADMIN: Retrieve a user by ID",
             description = "Get information about a user by ID with: id, firstname, lastname, fullname, email, phone, birthday, gender, username and role.")
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<UserModel>> getUserById (@PathVariable("id")String id) {
+    public ResponseEntity<UserModel> getUserById (@PathVariable("id")String id) {
         return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);
     }
 
