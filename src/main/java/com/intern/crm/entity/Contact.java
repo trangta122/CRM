@@ -71,7 +71,7 @@ public class Contact extends Auditable<String> {
     }
 
     public String getFullname() {
-        return lastname + " " + firstname;
+        return fullname;
     }
 
     public void setFullname(String fullname) {

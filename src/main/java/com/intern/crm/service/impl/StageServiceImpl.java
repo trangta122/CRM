@@ -25,6 +25,8 @@ public class StageServiceImpl implements StageService {
     OpportunityRepository opportunityRepository;
     @Autowired
     ModelMapper modelMapper;
+    @Autowired
+    OpportunityServiceImpl opportunityService;
     @Override
     public List<StageModel> listAllStages() {
         List<Stage> stage = stageRepository.findAll();
@@ -59,13 +61,12 @@ public class StageServiceImpl implements StageService {
     @Override
     public List<OpportunityModel> getOpportunitiesByStageId(String id) {
         List<Opportunity> opportunities = opportunityRepository.findByStageId(id);
-        List<OpportunityModel> opportunityDisplays = new ArrayList<>();
+        List<OpportunityModel> opportunityModels = new ArrayList<>();
 
         for (Opportunity opportunity : opportunities) {
-            OpportunityModel opportunityModel = modelMapper.map(opportunity, OpportunityModel.class);
-            opportunityModel.setSalesperson(opportunity.getSalesperson().getFirstname() + " " + opportunity.getSalesperson().getLastname());
-            opportunityDisplays.add(opportunityModel);
+            OpportunityModel opportunityModel = modelMapper.map(opportunityService.setStageAndSalesperson(opportunity), OpportunityModel.class);
+            opportunityModels.add(opportunityModel);
         }
-        return opportunityDisplays;
+        return opportunityModels;
     }
 }

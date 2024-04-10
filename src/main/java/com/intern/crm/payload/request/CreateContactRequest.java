@@ -31,7 +31,7 @@ public class CreateContactRequest {
     }
 
     public String getFullname() {
-        return lastname + " " + firstname;
+        return firstname  + " " + lastname;
     }
 
     public void setFullname(String fullname) {

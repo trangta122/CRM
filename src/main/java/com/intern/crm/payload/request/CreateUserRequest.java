@@ -32,7 +32,7 @@ public class CreateUserRequest {
     }
 
     public String getFullname() {
-        return lastname + " " + firstname;
+        return firstname + " " + lastname;
     }
 
     public void setFullname(String fullname) {
@@ -94,4 +94,5 @@ public class CreateUserRequest {
     public void setRole(Set<String> role) {
         this.role = role;
     }
+
 }

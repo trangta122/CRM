@@ -42,7 +42,7 @@ public class ContactModel {
     }
 
     public String getFullname() {
-        return fullname;
+        return firstname + " " + lastname;
     }
 
     public void setFullname(String fullname) {

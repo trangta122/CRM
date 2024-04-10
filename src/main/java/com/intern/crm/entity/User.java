@@ -19,32 +19,26 @@ public class User extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
-    @Column(name = "firstname")
     private String firstname;
-    @Column(name = "lastname")
     private String lastname;
-    @Column(name = "fullname")
     private String fullname;
     @NotBlank
     @Email
     private String email;
-    @Column(name = "phone")
     private String phone;
-    @Column(name = "birthday")
     private Date birthday;
-    @Column(name = "gender")
     private String gender;
-    @Column(name = "username")
     @NotBlank
     private String username;
-    @Column(name = "password")
     @NotBlank
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Avatar avatar;
 
     public User() {
     }
@@ -87,7 +81,7 @@ public class User extends Auditable<String> {
     }
 
     public String getFullname() {
-        return lastname + " " + firstname;
+        return fullname;
     }
 
     public void setFullname(String fullname) {
@@ -148,5 +142,13 @@ public class User extends Auditable<String> {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
     }
 }
