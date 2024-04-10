@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Optional;
 
 public class AuditorAwareImpl implements AuditorAware<String> {
+    public static final String userAnymount = "11111111-1111-1111-1111-11111111111";
 
 //    @Override
 //    public Optional<String> getCurrentAuditor() {
@@ -17,8 +18,8 @@ public class AuditorAwareImpl implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return null;
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
+            return Optional.of(userAnymount);
         }
 
         return ((UserDetailsImpl) authentication.getPrincipal()).getId().describeConstable();
