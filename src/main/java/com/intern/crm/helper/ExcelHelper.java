@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ExcelHelper {
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERs = {"name", "email", "phone", "address", "website", "revenue", "isCustomer"};
+    static String[] HEADERs = {"company", "email", "phone", "address", "website", "revenue", "isCustomer"};
     static String SHEET = "opportunity";
 
     //checks whether the file format is Excel or not.
@@ -51,7 +51,7 @@ public class ExcelHelper {
 
                     switch (cellIndex) {
                         case 0:
-                            opportunity.setName(currentCell.getStringCellValue());
+                            opportunity.setCompany(currentCell.getStringCellValue());
                             break;
                         case 1:
                             opportunity.setEmail(currentCell.getStringCellValue());

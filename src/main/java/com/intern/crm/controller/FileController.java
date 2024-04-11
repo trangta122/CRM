@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "File")
 @SecurityRequirement(name = "Authorization")
 @RestController
-@RequestMapping("/file")
+@RequestMapping("/files")
 public class FileController {
     @Autowired
     FileService fileService;

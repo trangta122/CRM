@@ -5,6 +5,7 @@ import com.intern.crm.entity.EPriority;
 public class OpportunityModel {
     private String id;
     private String name;
+    private String company;
     private String email;
     private String phone;
     private String address;
@@ -13,6 +14,9 @@ public class OpportunityModel {
     private Double revenue;
     private Boolean isCustomer;
     private EPriority priority;
+    private Float probability;
+    private String lostReason;
+    private String lostNote;
     private String stage;
     private String salesperson;
 
@@ -110,5 +114,37 @@ public class OpportunityModel {
 
     public void setPriority(EPriority priority) {
         this.priority = priority;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public Float getProbability() {
+        return probability;
+    }
+
+    public void setProbability(Float probability) {
+        this.probability = probability;
+    }
+
+    public String getLostReason() {
+        return lostReason;
+    }
+
+    public void setLostReason(String lostReason) {
+        this.lostReason = lostReason;
+    }
+
+    public String getLostNote() {
+        return lostNote;
+    }
+
+    public void setLostNote(String lostNote) {
+        this.lostNote = lostNote;
     }
 }

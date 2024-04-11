@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 @Tag(name = "Send Email")
 @RestController
-@RequestMapping("/mail")
+@RequestMapping("/mails")
 public class EmailController {
     @Autowired
     EmailService emailService;

@@ -33,7 +33,7 @@ import java.util.Map;
 @Tag(name = "Opportunity", description = "Opportunity Management APIs")
 @SecurityRequirement(name = "Authorization")
 @RestController
-@RequestMapping("/opportunity")
+@RequestMapping("/opportunities")
 public class OpportunityController {
     @Autowired
     OpportunityRepository opportunityRepository;

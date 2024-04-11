@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Contact", description = "Contact Management APIs")
 @SecurityRequirement(name = "Authorization")
 @RestController
-@RequestMapping("/contact")
+@RequestMapping("/contacts")
 public class ContactController {
     @Autowired
     ContactService contactService;
