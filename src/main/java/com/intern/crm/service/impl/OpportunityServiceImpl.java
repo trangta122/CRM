@@ -11,6 +11,7 @@ import com.intern.crm.repository.UserRepository;
 import com.intern.crm.service.OpportunityService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +30,8 @@ public class OpportunityServiceImpl implements OpportunityService {
     UserRepository userRepository;
     @Autowired
     ModelMapper modelMapper;
+    @Value("${crm.app.lost}")
+    private String lostId;
 
     @Override
     public Opportunity createOpportunity(CreateOpportunityRequest opportunityModel, String stageId, Boolean isCustomer) {
@@ -43,9 +46,9 @@ public class OpportunityServiceImpl implements OpportunityService {
     public void importExcel(MultipartFile file) {
         try {
             List<Opportunity> opportunityList = ExcelHelper.excelToOpportunities(file.getInputStream());
-            int a = 1;
+
             opportunityRepository.saveAll(opportunityList);
-            int b =2;
+
         } catch (IOException e) {
             throw new RuntimeException("Import Excel data is failed to store: " + e.getMessage());
         }
@@ -85,9 +88,16 @@ public class OpportunityServiceImpl implements OpportunityService {
         opportunity.setWebsite(opportunityModel.getWebsite());
         opportunity.setDescription(opportunityModel.getDescription());
         opportunity.setRevenue(opportunityModel.getRevenue());
-        opportunity.setLastModifiedDate(new Date());
         opportunity.setPriority(opportunityModel.getPriority());
+        opportunity.setCompany(opportunityModel.getCompany());
+        opportunity.setProbability(opportunityModel.getProbability());
+        opportunity.setLostReason(opportunityModel.getLostReason());
+        opportunity.setLostNote(opportunityModel.getLostNote());
+
+        opportunity.setLastModifiedDate(new Date());
+
         opportunity.setStage(stageRepository.findById(opportunityModel.getStage()).get());
+
         opportunityRepository.save(opportunity);
 
         return setStageAndSalesperson(opportunity);

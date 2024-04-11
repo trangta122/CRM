@@ -18,7 +18,7 @@ import java.util.Date;
 @Tag(name = "Activity", description = "Activity Management APIs")
 @SecurityRequirement(name = "Authorization")
 @RestController
-@RequestMapping("/activity")
+@RequestMapping("/activities")
 public class ActivityController {
     @Autowired
     ActivityService activityService;

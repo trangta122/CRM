@@ -28,4 +28,5 @@ public interface OpportunityService {
 
     //Retrieve all opportunities of a contact;
     List<OpportunityModel> findOpportunityByContactId(String id);
+
 }

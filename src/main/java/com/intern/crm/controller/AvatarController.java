@@ -20,7 +20,7 @@ import java.io.IOException;
 @Tag(name = "Avatar")
 @SecurityRequirement(name = "Authorization")
 @RestController
-@RequestMapping("/avatar")
+@RequestMapping("/avatars")
 public class AvatarController {
     @Autowired
     AvatarService avatarService;

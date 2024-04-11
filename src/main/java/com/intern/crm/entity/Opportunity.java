@@ -14,15 +14,20 @@ public class Opportunity extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String name; //company name
+    private String name; //opportunity name
+    private String company;
     private String email;
     private String phone;
     private String address;
     private String website;
     private String description;
     private Double revenue; //expected revenue
-    private Boolean isCustomer = false;
     private EPriority priority;
+    private Float probability;
+    private Boolean isCustomer = false;
+    private String lostReason;
+    private String lostNote;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Stage stage;
@@ -55,16 +60,23 @@ public class Opportunity extends Auditable<String> {
     public Opportunity() {
     }
 
-    public Opportunity(String name, String email, String phone, String address, String website, String description, Double revenue, Boolean isCustomer) {
+    public Opportunity(String id, String name, String company, String email, String phone, String address, String website, String description, Double revenue, EPriority priority, Float probability, Boolean isCustomer, String lostReason, String lostNote) {
+        this.id = id;
         this.name = name;
+        this.company = company;
         this.email = email;
         this.phone = phone;
         this.address = address;
         this.website = website;
         this.description = description;
         this.revenue = revenue;
+        this.priority = priority;
+        this.probability = probability;
         this.isCustomer = isCustomer;
+        this.lostReason = lostReason;
+        this.lostNote = lostNote;
     }
+
     //getter & setter
     public String getId() {
         return id;
@@ -176,5 +188,37 @@ public class Opportunity extends Auditable<String> {
 
     public void setPriority(EPriority priority) {
         this.priority = priority;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public Float getProbability() {
+        return probability;
+    }
+
+    public void setProbability(Float probability) {
+        this.probability = probability;
+    }
+
+    public String getLostReason() {
+        return lostReason;
+    }
+
+    public void setLostReason(String lostReason) {
+        this.lostReason = lostReason;
+    }
+
+    public String getLostNote() {
+        return lostNote;
+    }
+
+    public void setLostNote(String lostNote) {
+        this.lostNote = lostNote;
     }
 }

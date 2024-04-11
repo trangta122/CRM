@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @Tag(name = "User", description = "User Management APIs")
 @SecurityRequirement(name = "Authorization")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
     @Autowired
     UserService userService;

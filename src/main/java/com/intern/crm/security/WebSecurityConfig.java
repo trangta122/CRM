@@ -66,11 +66,11 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/mail/**").permitAll()
-                                .requestMatchers( "/user/**").hasAnyAuthority("ROLE_ADMIN")
-                                .requestMatchers("/stage/**" , "/opportunity/**",
-                                                            "/contact/**", "/activity/**",
-                                                            "/file/**", "/avatar/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        auth.requestMatchers("/auth/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                                .requestMatchers( "/users/**").hasAnyAuthority("ROLE_ADMIN")
+                                .requestMatchers("/stages/**" , "/opportunities/**",
+                                                            "/contacts/**", "/activities/**",
+                                                            "/files/**", "/avatars/**", "/mails/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 //                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .anyRequest().authenticated());
 

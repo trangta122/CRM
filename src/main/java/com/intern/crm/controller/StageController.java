@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/stage")
+@RequestMapping("/stages")
 @SecurityRequirement(name = "Authorization")
 @Tag(name = "Stage", description = "Stage Management APIs")
 public class StageController {

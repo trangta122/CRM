@@ -1,19 +1,19 @@
 package com.intern.crm.payload.request;
 
 public class CreateOpportunityRequest {
-    private String name; //company name
+    private String company; //company name
     private String email;
     private String phone;
     private String address;
     private String website;
     private Double revenue; //expected revenue
 
-    public String getName() {
-        return name;
+    public String getCompany() {
+        return company;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getEmail() {
