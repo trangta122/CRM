@@ -1,8 +1,8 @@
 package com.intern.crm.service.impl;
 
-import com.intern.crm.entity.Attachment;
+import com.intern.crm.entity.TemplateFile;
 import com.intern.crm.payload.request.EmailRequest;
-import com.intern.crm.repository.FileRepository;
+import com.intern.crm.repository.TemplateFileRepository;
 import com.intern.crm.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -14,14 +14,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-
 @Service
 public class EmailServiceImpl implements EmailService {
     @Autowired
     JavaMailSender javaMailSender;
     @Autowired
-    FileRepository fileRepository;
+    TemplateFileRepository fileRepository;
     @Value("${spring.mail.username}") private String sender;
 
     @Override
@@ -54,10 +52,10 @@ public class EmailServiceImpl implements EmailService {
             mimeMessageHelper.setSubject(emailRequest.getSubject());
             mimeMessageHelper.setText(emailRequest.getMessage());
 
-            Attachment attachment = fileRepository.findById(emailRequest.getAttachment()).get();
+            TemplateFile attachment = fileRepository.findById(emailRequest.getAttachment()).get();
             String path = "uploads/" + attachment.getPhysicalPath();
 
-            FileSystemResource file = new FileSystemResource(new File(path));
+            FileSystemResource file = new FileSystemResource(new java.io.File(path));
             mimeMessageHelper.addAttachment(file.getFilename(), file);
 
             javaMailSender.send(mimeMessage);

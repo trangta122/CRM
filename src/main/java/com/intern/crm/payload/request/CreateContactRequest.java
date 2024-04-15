@@ -31,11 +31,11 @@ public class CreateContactRequest {
     }
 
     public String getFullname() {
-        return firstname  + " " + lastname;
+        return fullname;
     }
 
     public void setFullname(String fullname) {
-        this.fullname = fullname;
+        this.fullname = getFirstname() + " " + getLastname();
     }
 
     public String getEmail() {

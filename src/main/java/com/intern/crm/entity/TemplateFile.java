@@ -1,34 +1,29 @@
 package com.intern.crm.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.intern.crm.audit.Auditable;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
-@Table(name = "files")
+@Table(name = "template_files")
 @EntityListeners(EntityListeners.class)
-public class Attachment extends Auditable<String> {
+public class TemplateFile extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String name;
     private String type;
     private String physicalPath;
+    private Boolean isFile;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE
-    }, mappedBy = "files")
-    @JsonIgnore
-    private List<Opportunity> opportunities = new ArrayList<>();
+    @OneToOne(fetch = FetchType.LAZY)
+    private Opportunity opportunity;
+
 
     //constructor
-    public Attachment() {
+    public TemplateFile() {
     }
 
-    public Attachment(String name, String type, String physicalPath) {
+    public TemplateFile(String name, String type, String physicalPath) {
         this.name = name;
         this.type = type;
         this.physicalPath = physicalPath;
@@ -67,11 +62,19 @@ public class Attachment extends Auditable<String> {
         this.physicalPath = physicalPath;
     }
 
-    public List<Opportunity> getOpportunities() {
-        return opportunities;
+    public Opportunity getOpportunity() {
+        return opportunity;
     }
 
-    public void setOpportunities(List<Opportunity> opportunities) {
-        this.opportunities = opportunities;
+    public void setOpportunity(Opportunity opportunity) {
+        this.opportunity = opportunity;
+    }
+
+    public Boolean getIsFile() {
+        return isFile;
+    }
+
+    public void setIsFile(Boolean file) {
+        isFile = file;
     }
 }
