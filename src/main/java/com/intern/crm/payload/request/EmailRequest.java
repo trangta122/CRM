@@ -6,6 +6,10 @@ public class EmailRequest {
     private String message;
     private String attachment;
 
+    private String company;
+    private String salesperson;
+    private String description;
+
     public EmailRequest() {
     }
 
@@ -15,6 +19,7 @@ public class EmailRequest {
         this.message = message;
         this.attachment = attachment;
     }
+
 
     public String getRecipient() {
         return recipient;
@@ -46,5 +51,29 @@ public class EmailRequest {
 
     public void setAttachment(String attachment) {
         this.attachment = attachment;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getSalesperson() {
+        return salesperson;
+    }
+
+    public void setSalesperson(String salesperson) {
+        this.salesperson = salesperson;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -1,18 +1,28 @@
 package com.intern.crm.service.impl;
 
+import com.intern.crm.configuration.Freemarker;
 import com.intern.crm.entity.TemplateFile;
 import com.intern.crm.payload.request.EmailRequest;
 import com.intern.crm.repository.TemplateFileRepository;
 import com.intern.crm.service.EmailService;
+import freemarker.core.ParseException;
+import freemarker.template.*;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.PathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -20,6 +30,8 @@ public class EmailServiceImpl implements EmailService {
     JavaMailSender javaMailSender;
     @Autowired
     TemplateFileRepository fileRepository;
+    @Autowired
+    private Configuration configFreemarker;
     @Value("${spring.mail.username}") private String sender;
 
     @Override
@@ -63,6 +75,42 @@ public class EmailServiceImpl implements EmailService {
             return "Mail sent successfully...";
 
         } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String sendColdEmail(EmailRequest emailRequest, Map<String, Object> model) throws MessagingException {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    StandardCharsets.UTF_8.name());
+
+            Template template = configFreemarker.getTemplate("index.html");
+            String content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+
+            helper.setTo(sender);
+            helper.setTo(emailRequest.getRecipient());
+            helper.setSubject(emailRequest.getSubject());
+            helper.setText(content, true);
+
+            String logoPath = "src/main/resources/static/icon/logo.svg";
+            FileSystemResource fileSystemResource = new FileSystemResource(new File(logoPath));
+            helper.addAttachment(fileSystemResource.getFilename(), fileSystemResource);
+
+            javaMailSender.send(mimeMessage);
+
+            return "Cold email is being sent...";
+
+        } catch (TemplateNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        } catch (MalformedTemplateNameException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (TemplateException e) {
             throw new RuntimeException(e);
         }
     }
