@@ -7,23 +7,37 @@
     <title>Title</title>
     <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Oooh+Baby&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            display: flex; justify-content: center
+        }
+    </style>
 </head>
 <body>
-<div class="ColdEmailTemplate" style="width: 785px; height: 792px; background: white; border: 0.50px rgba(0, 0, 0, 0.60) solid; flex-direction: column; justify-content: center; align-items: center; display: inline-flex">
-    <div class="Group8" style="width: 786px; height: 792px; position: relative">
+    <div class="ColdEmailTemplate" style="width: 790px;background: white; border: 0.50px rgba(0, 0, 0, 0.60) solid;">
         <!--Header start-->
-        <div class="Header" style="width: 786px; height: 180px; left: 0px; top: 0px; position: absolute; background: #4D648D" >
-            <div class="MakingTheFirstContact" style="left: 145px; top: 37px; position: absolute; text-align: center; color: white; font-size: 35px; font-family: Poppins; font-weight: 600; word-wrap: break-word">MAKING THE FIRST CONTACT</div>
+        <div class="Header" style="width: 790px; height: 180px; background: #4D648D; display: flex; justify-content: center;" >
+            <p class="MakingTheFirstContact" style="color: white; font-size: 35px; font-family: Poppins; font-weight: 600; word-wrap: break-word;">MAKING THE FIRST CONTACT</p>
         </div>
         <!--Header end-->
 
         <!--Content start-->
-        <div class="Content" style="width: 738px; height: 535px; left: 24px; top: 128px; position: absolute; background: white; border-radius: 20px; border: 0.50px rgba(0, 0, 0, 0.60) solid">
+        <div class="Content"
+             style="width: 740px;
+                    margin-top: -55px;
+                    background: white;
+                    border-radius: 20px;
+                    border: 0.50px rgba(0, 0, 0, 0.60) solid;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    margin-left: 25px;">
+
             <!--Logo-->
-            <img class="logo" style=" left: 17px; top: 20px; position: absolute" src="/static/icon/logo.svg"/>
+            <img class="logo" style="margin-left: -465px;margin-top: 40px;" src="/static/icon/logo.svg"/>
 
             <!--Message-->
-            <div class="message" style="width: 712px; height: 355px; left: 17px; top: 163px; position: absolute; text-align: justify">
+            <div class="message" style="width: 712px;margin-top: 30px;margin-bottom: 40px; text-align: justify">
                 <span style="color: black; font-size: 20px; font-family: Poppins; font-weight: 400; word-wrap: break-word">
                 Dear ${company},<br/><br/></span>
 
@@ -40,17 +54,13 @@
         <!--Content end-->
 
         <!--Footer start-->
-        <div class="Footer" style="width: 785px; height: 50px; left: 0px; top: 742px; position: absolute; background: #4D648D">
-            <div class="Group7" style="width: 300px; height: 23px; left: 279px; top: 13.75px; position: absolute">
-                <div class="Blossom" style="width: 150px; height: 23px; left: 105px; top: 0px; position: absolute; color: white; font-size: 15px; font-family: Poppins; font-weight: 400; letter-spacing: 0.75px; ">2024 | Blossom</div>
-                <div class="Copyright" style="width: 81px; height: 23px; left: 0px; top: 0px; position: absolute; color: white; font-size: 15px; font-family: Poppins; font-weight: 400; letter-spacing: 0.75px;">Copyright</div>
-                <div class="PhCopyrightThin" style="width: 15px; height: 15px; padding: 1.64px; left: 83px; position: absolute; justify-content: center; align-items: center; display: inline-flex">
-                    <div style="width: 11.72px; height: 11.72px"><img src="/static/icon/ph_copyright-thin.svg"></div>
-                </div>
-            </div>
+        <div class="Footer" style="width: 790px; height: 50px;margin-top: 50px; background: #4D648D;display: flex;align-items: center;justify-content: center;">
+                <p class="Copyright" style="color: white; font-size: 15px; font-family: Poppins; font-weight: 400; letter-spacing: 0.75px;word-wrap: break-word">Copyright</p>
+                <img class="copyrighticon" src="/static/icon/ph_copyright-thin.svg" style="width: 15px;">
+                <p class="Blossom" style="color: white; font-size: 15px; font-family: Poppins; font-weight: 400; letter-spacing: 0.75px;word-wrap: break-word ">2024 | Blossom</p>
         </div>
         <!--Footer end-->
+
     </div>
-</div>
 </body>
 </html>
