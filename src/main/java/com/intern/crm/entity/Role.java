@@ -14,8 +14,6 @@ public class Role {
     @Enumerated(EnumType.STRING)
     private ERole name;
 
-//    @Column(name = "description")
-//    private String description;
 
     public Role() {
     }

@@ -2,8 +2,11 @@ package com.intern.crm.service.impl;
 
 import com.intern.crm.entity.Opportunity;
 import com.intern.crm.entity.Stage;
+import com.intern.crm.entity.User;
 import com.intern.crm.helper.ExcelHelper;
 import com.intern.crm.payload.model.OpportunityModel;
+import com.intern.crm.payload.model.StageModel;
+import com.intern.crm.payload.model.UserModel;
 import com.intern.crm.payload.request.CreateOpportunityRequest;
 import com.intern.crm.repository.OpportunityRepository;
 import com.intern.crm.repository.StageRepository;
@@ -12,13 +15,16 @@ import com.intern.crm.service.OpportunityService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OpportunityServiceImpl implements OpportunityService {
@@ -96,7 +102,9 @@ public class OpportunityServiceImpl implements OpportunityService {
 
         opportunity.setLastModifiedDate(new Date());
 
-        opportunity.setStage(stageRepository.findById(opportunityModel.getStage()).get());
+        //set stage
+        Stage stage = stageRepository.findById(opportunityModel.getStage().getId()).get();
+        opportunity.setStage(stage);
 
         opportunityRepository.save(opportunity);
 
@@ -123,17 +131,51 @@ public class OpportunityServiceImpl implements OpportunityService {
         return opportunityModels;
     }
 
+    @Override
+    public Map<String, Object> pagingOpportunity(int page, int size, String sortBy) {
+        List<Opportunity> opportunities = new ArrayList<>();
+        Pageable paging = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+
+        Page<Opportunity> opportunityPage;
+        opportunityPage = opportunityRepository.findAll(paging);
+
+        opportunities = opportunityPage.getContent();
+
+        List<OpportunityModel> opportunityModels = new ArrayList<>();
+        for (Opportunity opportunity : opportunities) {
+            opportunityModels.add(setStageAndSalesperson(opportunity));
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("opportunities", opportunityModels);
+        response.put("currentPage", opportunityPage.getNumber());
+        response.put("totalItems", opportunityPage.getTotalElements());
+        response.put("totalPages", opportunityPage.getTotalPages());
+
+        return response;
+    }
+
 
     public OpportunityModel setStageAndSalesperson(Opportunity o) {
         OpportunityModel opportunityModel = modelMapper.map(o, OpportunityModel.class);
+        StageModel stageModel = modelMapper.map(o.getStage(), StageModel.class);
+
 
         if (o.getStage() != null) {
-            opportunityModel.setStage(o.getStage().getId());
-        } else opportunityModel.setStage("");
+            opportunityModel.setStage(stageModel);
+        } else opportunityModel.setStage(null);
 
         if (o.getSalesperson() != null) {
-            opportunityModel.setSalesperson(o.getSalesperson().getId());
-        } else opportunityModel.setSalesperson("");
+            User user = userRepository.findById(o.getSalesperson().getId()).get();
+            UserModel userModel = modelMapper.map(user, UserModel.class);
+            userModel.setAvatar(user.getAvatar().getId()); //set Avatar ID for User model
+
+            //Set list roles for User model
+            userModel.setRole(user.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList()));
+
+            opportunityModel.setSalesperson(userModel);
+
+        } else opportunityModel.setSalesperson(null);
 
         return opportunityModel;
     }

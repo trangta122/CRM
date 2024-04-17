@@ -41,8 +41,6 @@ public class OpportunityController {
     StageRepository stageRepository;
     @Autowired
     OpportunityService opportunityService;
-    @Autowired
-    OpportunityServiceImpl opportunityServiceImpl;
 
     @Operation(summary = "Create an opportunity")
     @PostMapping("")
@@ -77,41 +75,15 @@ public class OpportunityController {
         return ResponseEntity.status(HttpStatus.OK).body(opportunityService.findOpportunityById(id));
     }
 
-    @Operation(summary = "Paging, Sort, Filter")
+    @Operation(summary = "Pagination")
     @GetMapping("")
-    public ResponseEntity<Map<String, Object>> getAllOpportunities(
-            @RequestParam(required = false) String email, //filter
+    public ResponseEntity<?> getAllOpportunities(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size,
-            @RequestParam(defaultValue = "email") String sortBy //sort
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "name") String sortBy
     ) {
-        try {
-            List<Opportunity> opportunities = new ArrayList<>();
-            Pageable paging = PageRequest.of(page, size, Sort.by(sortBy).descending());
 
-            Page<Opportunity> opportunityPage;
-            opportunityPage = opportunityRepository.findAll(paging);
-            if (email == null) {
-                opportunityPage = opportunityRepository.findAll(paging);
-            } else opportunityPage = opportunityRepository.findByEmailContaining(email, paging);
-
-            opportunities = opportunityPage.getContent();
-
-            List<OpportunityModel> opportunityModels = new ArrayList<>();
-            for (Opportunity opportunity : opportunities) {
-                opportunityModels.add(opportunityServiceImpl.setStageAndSalesperson(opportunity));
-            }
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("opportunities", opportunityModels);
-            response.put("currentPage", opportunityPage.getNumber());
-            response.put("totalItems", opportunityPage.getTotalElements());
-            response.put("totalPages", opportunityPage.getTotalPages());
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(opportunityService.pagingOpportunity(page, size, sortBy));
     }
 
     @Operation(summary = "Edit information, convert stage")

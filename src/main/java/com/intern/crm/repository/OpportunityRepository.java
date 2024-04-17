@@ -12,7 +12,7 @@ import java.util.List;
 public interface OpportunityRepository extends JpaRepository<Opportunity, String> {
     Page<Opportunity> findAll(Pageable pageable);
 
-    Page<Opportunity> findByEmailContaining(String email, Pageable pageable);
+    Page<Opportunity> findByNameContaining(String name, Pageable pageable);
 
     List<Opportunity> findOpportunityByContactsId(String id);
 

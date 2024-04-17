@@ -51,7 +51,7 @@ public class ActivityController {
         return ResponseEntity.status(HttpStatus.OK).body(activityService.getAllActivitiesByOpportunityId(id));
     }
 
-    @Operation(summary = "Pagination, Sort")
+    @Operation(summary = "Pagination")
     @GetMapping("")
     public ResponseEntity<?> getAllActivities(
             @RequestParam(defaultValue = "0") int page,

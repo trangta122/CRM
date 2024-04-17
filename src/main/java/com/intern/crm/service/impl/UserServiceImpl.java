@@ -15,7 +15,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -61,7 +63,7 @@ public class UserServiceImpl implements UserService {
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
-                    case "admin":
+                    case "Admin":
                         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
@@ -126,6 +128,34 @@ public class UserServiceImpl implements UserService {
         userModel1.setRole(userModel.getRoles());
         userModel1.setAvatar(u.getAvatar().getId());
         return userModel1;
+    }
+
+    @Override
+    public Map<String, Object> pagingUser(int page, int size, String sortBy) {
+        List<User> users = new ArrayList<>();
+        Pageable paging = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+
+        Page<User> pageUsers;
+        pageUsers = userRepository.findAll(paging);
+
+        users = pageUsers.getContent();
+
+        List<UserModel> userModelList = new ArrayList<>();
+        for (User u : users) {
+            UserModel userModel = modelMapper.map(u, UserModel.class);
+            List<String> roles = u.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList());
+            userModel.setRole(roles);
+            userModel.setAvatar(u.getAvatar().getId());
+            userModelList.add(userModel);
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("users", userModelList);
+        response.put("currentPage", pageUsers.getNumber());
+        response.put("totalItems", pageUsers.getTotalElements());
+        response.put("totalPages", pageUsers.getTotalPages());
+
+        return response;
     }
 
 //    @Override

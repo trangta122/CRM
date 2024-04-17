@@ -50,14 +50,14 @@ public class TempalteFileServiceImpl implements TemplateFileService {
 
     @Override
     public void mailMergeQuotation() throws Exception {
-        FileInputStream fileStreamPath = new FileInputStream("uploads/20240415150058227_quotation.docx");
-        WordDocument document = new WordDocument();
-        document.open(fileStreamPath, FormatType.Docx);
-        String[] fieldNames = new String[] {"dd/MM/yyyy", "product", "description", "price", "tax", "untaxedamount", "VAT", "total"};
-        String[] fieldValues = new String[] {"12/05/2024", "crm", "app", "150000000", "150000000", "8", "6545596225"};
-        document.getMailMerge().execute(fieldNames, fieldValues);
-        document.save("quotation.docx", FormatType.Docx);
-        document.close();
+//        FileInputStream fileStreamPath = new FileInputStream("uploads/20240415150058227_quotation.docx");
+//        WordDocument document = new WordDocument();
+//        document.open(fileStreamPath, FormatType.Docx);
+//        String[] fieldNames = new String[] {"dd/MM/yyyy", "product", "description", "price", "tax", "untaxedamount", "VAT", "total"};
+//        String[] fieldValues = new String[] {"12/05/2024", "crm", "app", "150000000", "150000000", "8", "6545596225"};
+//        document.getMailMerge().execute(fieldNames, fieldValues);
+//        document.save("quotation.docx", FormatType.Docx);
+//        document.close();
     }
 
     @Override

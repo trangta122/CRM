@@ -25,5 +25,5 @@ public interface ContactService {
     ContactModel editContactById(String id, ContactModel contactModel);
 
     //Pagination, Sort & Filter
-    Map<String, Object> pagingContact(String email, Integer page, Integer size, String sortBy);
+    Map<String, Object> pagingContact(int page, int size, String sortBy);
 }

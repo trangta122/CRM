@@ -100,16 +100,13 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public Map<String, Object> pagingContact(String email, Integer page, Integer size, String sortBy) {
+    public Map<String, Object> pagingContact(int page, int size, String sortBy) {
         List<Contact> contacts = new ArrayList<>();
-        Pageable paging = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        Pageable paging = PageRequest.of(page, size, Sort.by(sortBy).ascending());
 
         Page<Contact> contactPage;
         contactPage = contactRepository.findAll(paging);
 
-        if (email == null) {
-            contactPage = contactRepository.findAll(paging);
-        } else contactPage = contactRepository.findByEmailContaining(email, paging);
 
         contacts = contactPage.getContent();
 

@@ -72,46 +72,14 @@ public class UserController {
         return new ResponseEntity<UserModel>(userService.updateUser(user, id), HttpStatus.OK);
     }
 
-    @Operation(summary = "ADMIN: Paging, Sort & Filter")
+    @Operation(summary = "ADMIN: Pagination")
     @GetMapping("")
-    public ResponseEntity<Map<String, Object>> getAllUsers(
-            @RequestParam(required = false) String email, //filter
+    public ResponseEntity<?> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "3") int size,
-            @RequestParam(defaultValue = "email") String sortBy //sort
+            @RequestParam(defaultValue = "fullname") String sortBy //sort
     ) {
-        try {
-            List<User> users = new ArrayList<>();
-            Pageable paging = PageRequest.of(page, size, Sort.by(sortBy).descending());
-
-            Page<User> pageUsers;
-            pageUsers = userRepository.findAll(paging);
-            if (email == null) {
-                pageUsers = userRepository.findAll(paging);
-            } else {
-                pageUsers = userRepository.findByEmailContaining(email, paging);
-            }
-
-            users = pageUsers.getContent();
-
-            List<UserModel> userModelList = new ArrayList<>();
-            for (User u : users) {
-                UserModel userModel = modelMapper.map(u, UserModel.class);
-                List<String> roles = u.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList());
-                userModel.setRole(roles);
-                userModelList.add(userModel);
-            }
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("users", userModelList);
-            response.put("currentPage", pageUsers.getNumber());
-            response.put("totalItems", pageUsers.getTotalElements());
-            response.put("totalPages", pageUsers.getTotalPages());
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(userService.pagingUser(page, size, sortBy));
     }
 
     @Operation(summary = "ADMIN: List roles")

@@ -46,7 +46,7 @@ public class UserModel {
     }
 
     public String getFullname() {
-        return fullname;
+        return firstname + " " + lastname;
     }
 
     public void setFullname(String fullname) {

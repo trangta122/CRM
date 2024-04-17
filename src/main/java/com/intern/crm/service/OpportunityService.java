@@ -6,6 +6,7 @@ import com.intern.crm.payload.request.CreateOpportunityRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OpportunityService {
     //create a new opportunity
@@ -29,4 +30,6 @@ public interface OpportunityService {
     //Retrieve all opportunities of a contact;
     List<OpportunityModel> findOpportunityByContactId(String id);
 
+    //Pagination
+    Map<String, Object> pagingOpportunity(int page, int size, String sortBy);
 }

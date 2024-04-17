@@ -2,6 +2,8 @@ package com.intern.crm.payload.model;
 
 import com.intern.crm.entity.EPriority;
 
+import java.util.List;
+
 public class OpportunityModel {
     private String id;
     private String name;
@@ -17,9 +19,10 @@ public class OpportunityModel {
     private Float probability;
     private String lostReason;
     private String lostNote;
-    private String stage;
-    private String salesperson;
+    private StageModel stage;
+    private UserModel salesperson;
 
+    //getter & setter
     public String getId() {
         return id;
     }
@@ -92,19 +95,19 @@ public class OpportunityModel {
         isCustomer = customer;
     }
 
-    public String getStage() {
+    public StageModel getStage() {
         return stage;
     }
 
-    public void setStage(String stage) {
+    public void setStage(StageModel stage) {
         this.stage = stage;
     }
 
-    public String getSalesperson() {
+    public UserModel getSalesperson() {
         return salesperson;
     }
 
-    public void setSalesperson(String salesperson) {
+    public void setSalesperson(UserModel salesperson) {
         this.salesperson = salesperson;
     }
 
