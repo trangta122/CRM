@@ -35,27 +35,20 @@ public class Opportunity extends Auditable<String> {
     @ManyToOne(fetch = FetchType.LAZY)
     private User salesperson;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    private TemplateFile templateFile;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "opportunity_contacts",
     joinColumns = { @JoinColumn(name = "opportunity_Id")},
     inverseJoinColumns = {@JoinColumn(name = "contact_Id")})
     private List<Contact> contacts = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "opportunity_files",
-                joinColumns = {@JoinColumn(name = "opportunity_id")},
-                inverseJoinColumns = {@JoinColumn(name = "file_id")})
-    private List<Attachment> files = new ArrayList<>();
-
     public void addContact(Contact contact) {
         this.contacts.add(contact);
         contact.getOpportunities().add(this);
     }
 
-    public void addFile(Attachment file) {
-        this.files.add(file);
-        file.getOpportunities().add(this);
-    }
 
     public Opportunity() {
     }
@@ -174,14 +167,6 @@ public class Opportunity extends Auditable<String> {
         this.contacts = contacts;
     }
 
-    public List<Attachment> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<Attachment> files) {
-        this.files = files;
-    }
-
     public EPriority getPriority() {
         return priority;
     }
@@ -220,5 +205,13 @@ public class Opportunity extends Auditable<String> {
 
     public void setLostNote(String lostNote) {
         this.lostNote = lostNote;
+    }
+
+    public TemplateFile getTemplateFile() {
+        return templateFile;
+    }
+
+    public void setTemplateFile(TemplateFile templateFile) {
+        this.templateFile = templateFile;
     }
 }

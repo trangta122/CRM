@@ -3,7 +3,7 @@ package com.intern.crm.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.intern.crm.payload.response.MessageResponse;
-import com.intern.crm.service.FileService;
+import com.intern.crm.service.TemplateFileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,15 +20,22 @@ import org.springframework.web.multipart.MultipartFile;
 @SecurityRequirement(name = "Authorization")
 @RestController
 @RequestMapping("/files")
-public class FileController {
+public class TemplateFileController {
     @Autowired
-    FileService fileService;
+    TemplateFileService fileService;
 
     @Operation(summary = "Upload a file")
     @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> uploadFile(@RequestPart MultipartFile file) throws JsonMappingException, JsonProcessingException {
-        fileService.saveFile(file);
+    public ResponseEntity<?> uploadFile(@RequestPart MultipartFile file,
+                                        @RequestParam(value = "isFile", defaultValue = "false") boolean isFile) throws JsonMappingException, JsonProcessingException {
+        fileService.saveFile(file, isFile);
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("Upload successfully."));
+    }
+
+    @PostMapping("/mailmerge")
+    public ResponseEntity<?> mailmerge() throws Exception {
+        fileService.mailMergeQuotation();
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("Mail merge successfully"));
     }
 
     @Operation(summary = "Download a file by File's ID")
