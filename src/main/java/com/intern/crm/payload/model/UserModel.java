@@ -16,6 +16,7 @@ public class UserModel {
     private String phone;
     private Date birthday;
     private String gender;
+    private String username;
     private List<String> roles;
     private String avatar;
 
@@ -99,5 +100,17 @@ public class UserModel {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }
