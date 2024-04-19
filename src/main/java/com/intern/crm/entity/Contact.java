@@ -26,6 +26,7 @@ public class Contact extends Auditable<String> {
     private String phone;
     private Date birthday;
     private String gender;
+    private String jobPosition;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {
             CascadeType.PERSIST,
@@ -36,7 +37,7 @@ public class Contact extends Auditable<String> {
     public Contact() {
     }
 
-    public Contact(String firstname, String lastname, String fullname, String email, String phone, Date birthday, String gender) {
+    public Contact(String firstname, String lastname, String fullname, String email, String phone, Date birthday, String gender, String jobPosition) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.fullname = fullname;
@@ -44,6 +45,7 @@ public class Contact extends Auditable<String> {
         this.phone = phone;
         this.birthday = birthday;
         this.gender = gender;
+        this.jobPosition = jobPosition;
     }
 
     public String getId() {
@@ -108,6 +110,14 @@ public class Contact extends Auditable<String> {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getJobPosition() {
+        return jobPosition;
+    }
+
+    public void setJobPosition(String jobPosition) {
+        this.jobPosition = jobPosition;
     }
 
     public List<Opportunity> getOpportunities() {

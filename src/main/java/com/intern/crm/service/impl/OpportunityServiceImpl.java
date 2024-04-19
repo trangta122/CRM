@@ -98,7 +98,6 @@ public class OpportunityServiceImpl implements OpportunityService {
         opportunity.setCompany(opportunityModel.getCompany());
         opportunity.setProbability(opportunityModel.getProbability());
         opportunity.setLostReason(opportunityModel.getLostReason());
-        opportunity.setLostNote(opportunityModel.getLostNote());
 
         opportunity.setLastModifiedDate(new Date());
 

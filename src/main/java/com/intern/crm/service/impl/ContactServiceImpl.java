@@ -91,6 +91,7 @@ public class ContactServiceImpl implements ContactService {
         contact.setPhone(contactModel.getPhone());
         contact.setBirthday(contactModel.getBirthday());
         contact.setGender(contactModel.getGender());
+        contact.setJobPosition(contactModel.getJobPosition());
         contact.setLastModifiedDate(new Date());
 
         contactRepository.save(contact);

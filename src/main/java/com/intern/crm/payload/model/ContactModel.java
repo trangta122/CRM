@@ -15,6 +15,7 @@ public class ContactModel {
     private String phone;
     private Date birthday;
     private String gender;
+    private String jobPosition;
     private List<String> opportunityIds;
 
     public String getId() {
@@ -79,6 +80,14 @@ public class ContactModel {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getJobPosition() {
+        return jobPosition;
+    }
+
+    public void setJobPosition(String jobPosition) {
+        this.jobPosition = jobPosition;
     }
 
     public List<String> getOpportunityIds() {

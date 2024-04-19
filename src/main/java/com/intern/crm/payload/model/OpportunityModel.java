@@ -18,7 +18,6 @@ public class OpportunityModel {
     private EPriority priority;
     private Float probability;
     private String lostReason;
-    private String lostNote;
     private StageModel stage;
     private UserModel salesperson;
 
@@ -141,13 +140,5 @@ public class OpportunityModel {
 
     public void setLostReason(String lostReason) {
         this.lostReason = lostReason;
-    }
-
-    public String getLostNote() {
-        return lostNote;
-    }
-
-    public void setLostNote(String lostNote) {
-        this.lostNote = lostNote;
     }
 }

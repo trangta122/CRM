@@ -26,8 +26,6 @@ public class Opportunity extends Auditable<String> {
     private Float probability;
     private Boolean isCustomer = false;
     private String lostReason;
-    private String lostNote;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Stage stage;
@@ -53,7 +51,7 @@ public class Opportunity extends Auditable<String> {
     public Opportunity() {
     }
 
-    public Opportunity(String id, String name, String company, String email, String phone, String address, String website, String description, Double revenue, EPriority priority, Float probability, Boolean isCustomer, String lostReason, String lostNote) {
+    public Opportunity(String id, String name, String company, String email, String phone, String address, String website, String description, Double revenue, EPriority priority, Float probability, Boolean isCustomer, String lostReason) {
         this.id = id;
         this.name = name;
         this.company = company;
@@ -67,7 +65,6 @@ public class Opportunity extends Auditable<String> {
         this.probability = probability;
         this.isCustomer = isCustomer;
         this.lostReason = lostReason;
-        this.lostNote = lostNote;
     }
 
     //getter & setter
@@ -197,14 +194,6 @@ public class Opportunity extends Auditable<String> {
 
     public void setLostReason(String lostReason) {
         this.lostReason = lostReason;
-    }
-
-    public String getLostNote() {
-        return lostNote;
-    }
-
-    public void setLostNote(String lostNote) {
-        this.lostNote = lostNote;
     }
 
     public TemplateFile getTemplateFile() {

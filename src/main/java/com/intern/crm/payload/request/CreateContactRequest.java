@@ -13,6 +13,7 @@ public class CreateContactRequest {
     private String phone;
     private Date birthday;
     private String gender;
+    private String jobPosition;
 
     public String getFirstname() {
         return firstname;
@@ -68,5 +69,13 @@ public class CreateContactRequest {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getJobPosition() {
+        return jobPosition;
+    }
+
+    public void setJobPosition(String jobPosition) {
+        this.jobPosition = jobPosition;
     }
 }
