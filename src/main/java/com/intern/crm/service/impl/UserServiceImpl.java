@@ -4,6 +4,7 @@ import com.intern.crm.entity.Avatar;
 import com.intern.crm.entity.ERole;
 import com.intern.crm.entity.Role;
 import com.intern.crm.entity.User;
+import com.intern.crm.payload.model.FileModel;
 import com.intern.crm.payload.model.UserModel;
 import com.intern.crm.payload.request.CreateUserRequest;
 import com.intern.crm.payload.response.MessageResponse;
@@ -91,9 +92,13 @@ public class UserServiceImpl implements UserService {
         List<UserModel> userModels = new ArrayList<>();
         for (User user: users){
             UserModel userModel = modelMapper.map(user,UserModel.class);
+
             List<String> roles = (user.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList()));
             userModel.setRole(roles);
-            userModel.setAvatar(user.getAvatar().getId());
+
+            FileModel avatar = modelMapper.map(user.getAvatar(), FileModel.class);
+            userModel.setAvatar(avatar);
+
             userModels.add(userModel);
         }
             return userModels;
@@ -103,9 +108,12 @@ public class UserServiceImpl implements UserService {
     public UserModel findUserById(String id) {
         User user = userRepository.findById(id).get();
         UserModel userModel = modelMapper.map(user, UserModel.class);
+
         List<String> roles = userRepository.findById(id).get().getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList());
         userModel.setRole(roles);
-        userModel.setAvatar(user.getAvatar().getId());
+
+        FileModel avatar = modelMapper.map(user.getAvatar(), FileModel.class);
+        userModel.setAvatar(avatar);
 
         return userModel;
     }
@@ -120,13 +128,16 @@ public class UserServiceImpl implements UserService {
         u.setEmail(userModel.getEmail());
         u.setPhone(userModel.getPhone());
         u.setBirthday(userModel.getBirthday());
+        u.setUsername(userModel.getUsername());
         u.setGender(userModel.getGender());
         u.setLastModifiedDate(new Date());
 
         userRepository.save(u);
+
         UserModel userModel1 = modelMapper.map(u, UserModel.class);
         userModel1.setRole(userModel.getRoles());
-        userModel1.setAvatar(u.getAvatar().getId());
+        userModel1.setAvatar(modelMapper.map(u.getAvatar(), FileModel.class));
+
         return userModel1;
     }
 
@@ -145,7 +156,7 @@ public class UserServiceImpl implements UserService {
             UserModel userModel = modelMapper.map(u, UserModel.class);
             List<String> roles = u.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList());
             userModel.setRole(roles);
-            userModel.setAvatar(u.getAvatar().getId());
+            userModel.setAvatar(modelMapper.map(u.getAvatar(), FileModel.class));
             userModelList.add(userModel);
         }
 

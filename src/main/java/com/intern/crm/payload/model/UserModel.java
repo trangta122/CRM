@@ -18,7 +18,7 @@ public class UserModel {
     private String gender;
     private String username;
     private List<String> roles;
-    private String avatar;
+    private FileModel avatar;
 
     //getter & setter
 
@@ -94,11 +94,11 @@ public class UserModel {
         this.roles = roles;
     }
 
-    public String getAvatar() {
+    public FileModel getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public void setAvatar(FileModel avatar) {
         this.avatar = avatar;
     }
 

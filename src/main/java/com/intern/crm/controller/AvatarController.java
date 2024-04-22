@@ -30,5 +30,11 @@ public class AvatarController {
         avatarService.uploadAvatar(file);
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("Upload avatar successfully."));
     }
+
+    @Operation(summary = "Get an avatar by ID")
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getAvatarById(@PathVariable("id") String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(avatarService.getAvatarById(id));
+    }
 }
 

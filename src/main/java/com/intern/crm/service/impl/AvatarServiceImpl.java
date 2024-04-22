@@ -3,9 +3,11 @@ package com.intern.crm.service.impl;
 import com.intern.crm.audit.AuditorAwareImpl;
 import com.intern.crm.entity.Avatar;
 import com.intern.crm.entity.User;
+import com.intern.crm.payload.model.FileModel;
 import com.intern.crm.repository.AvatarRepository;
 import com.intern.crm.repository.UserRepository;
 import com.intern.crm.service.AvatarService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ public class AvatarServiceImpl implements AvatarService {
     UserRepository userRepository;
     @Autowired
     PasswordServiceImpl passwordService;
+    @Autowired
+    ModelMapper modelMapper;
     @Value("${spring.default.avatar}")
     private String defaultAvatar;
     @Override
@@ -37,10 +41,11 @@ public class AvatarServiceImpl implements AvatarService {
         String currentDateTime = dateFormatter.format(new Date());
         String path = currentDateTime + file.getOriginalFilename();
         saveAs(file, path);
+
         Avatar avatar = new Avatar();
         avatar.setName(file.getOriginalFilename());
         avatar.setType(file.getContentType());
-        avatar.setPhysicalPath(path);
+        avatar.setPhysicalPath("uploads/avatars/" + path);
         avatarRepository.save(avatar);
 
         //Update table user to save new avatar and delete previous avatar
@@ -51,6 +56,7 @@ public class AvatarServiceImpl implements AvatarService {
 
         user.setAvatar(avatar);
 
+
         if (!prevAvatar.equals(defaultAvatar)) {
             Path path1 = Paths.get("uploads/avatars/" + prevPath);
             Files.delete(path1); //delete raw file on server
@@ -59,6 +65,14 @@ public class AvatarServiceImpl implements AvatarService {
 
         userRepository.save(user);
     }
+
+    @Override
+    public FileModel getAvatarById(String id) {
+        Avatar avatar = avatarRepository.findById(id).get();
+        FileModel model = modelMapper.map(avatar, FileModel.class);
+        return model;
+    }
+
     public void saveAs(MultipartFile file, String relativePath) {
         try {
             File directory = new File(convertRelativeToAbsolutePath(relativePath).getParent().toString());
