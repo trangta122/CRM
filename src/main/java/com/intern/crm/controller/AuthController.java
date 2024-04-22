@@ -1,6 +1,7 @@
 package com.intern.crm.controller;
 
 import com.intern.crm.entity.User;
+import com.intern.crm.payload.model.FileModel;
 import com.intern.crm.payload.model.UserModel;
 import com.intern.crm.payload.request.ChangePasswordRequest;
 import com.intern.crm.payload.request.ForgotPasswordRequest;
@@ -80,7 +81,7 @@ public class AuthController {
         User user = userRepository.findById(((UserDetailsImpl) authentication.getPrincipal()).getId()).get();
         UserModel userModel = modelMapper.map(user, UserModel.class);
         List<String> roles = user.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList());
-        userModel.setAvatar(user.getAvatar().getId());
+        userModel.setAvatar(modelMapper.map(user.getAvatar(), FileModel.class));
         userModel.setRole(roles);
         return ResponseEntity.status(HttpStatus.OK).body(userModel);
     }

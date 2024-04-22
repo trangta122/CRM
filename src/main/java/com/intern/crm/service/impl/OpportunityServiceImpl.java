@@ -4,6 +4,7 @@ import com.intern.crm.entity.Opportunity;
 import com.intern.crm.entity.Stage;
 import com.intern.crm.entity.User;
 import com.intern.crm.helper.ExcelHelper;
+import com.intern.crm.payload.model.FileModel;
 import com.intern.crm.payload.model.OpportunityModel;
 import com.intern.crm.payload.model.StageModel;
 import com.intern.crm.payload.model.UserModel;
@@ -167,14 +168,14 @@ public class OpportunityServiceImpl implements OpportunityService {
         if (o.getSalesperson() != null) {
             User user = userRepository.findById(o.getSalesperson().getId()).get();
             UserModel userModel = modelMapper.map(user, UserModel.class);
-            userModel.setAvatar(user.getAvatar().getId()); //set Avatar ID for User model
+            userModel.setAvatar(modelMapper.map(user.getAvatar(), FileModel.class)); //set Avatar ID for User model
 
             //Set list roles for User model
             userModel.setRole(user.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList()));
 
             opportunityModel.setSalesperson(userModel);
 
-            userModel.setAvatar(user.getAvatar().getId());
+            userModel.setAvatar(modelMapper.map(user.getAvatar(), FileModel.class));
 
         } else opportunityModel.setSalesperson(null);
 
