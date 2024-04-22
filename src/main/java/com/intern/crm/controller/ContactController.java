@@ -54,13 +54,12 @@ public class ContactController {
     @Operation(summary = "Pagination, Sort & Filter")
     @GetMapping("")
     public ResponseEntity<?> getAllContacts(
-            @RequestParam(required = false) String email, //filter
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
-            @RequestParam(defaultValue = "email") String sortBy
+            @RequestParam(defaultValue = "2") int size,
+            @RequestParam(defaultValue = "fullname") String sortBy
             ) {
 
-        return ResponseEntity.status(HttpStatus.OK).body(contactService.pagingContact(email, page, size, sortBy));
+        return ResponseEntity.status(HttpStatus.OK).body(contactService.pagingContact(page, size, sortBy));
     }
 
 }

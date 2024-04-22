@@ -17,8 +17,9 @@ public class OpportunityModel {
     private Float probability;
     private String lostReason;
     private String lostNote;
-    private String stage;
-    private String salesperson;
+    private StageModel stage;
+    private UserModel salesperson;
+    private ContactModel contacts;
 
     public String getId() {
         return id;
@@ -92,20 +93,28 @@ public class OpportunityModel {
         isCustomer = customer;
     }
 
-    public String getStage() {
+    public StageModel getStage() {
         return stage;
     }
 
-    public void setStage(String stage) {
+    public void setStage(StageModel stage) {
         this.stage = stage;
     }
 
-    public String getSalesperson() {
+    public UserModel getSalesperson() {
         return salesperson;
     }
 
-    public void setSalesperson(String salesperson) {
+    public void setSalesperson(UserModel salesperson) {
         this.salesperson = salesperson;
+    }
+
+    public ContactModel getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(ContactModel contacts) {
+        this.contacts = contacts;
     }
 
     public EPriority getPriority() {

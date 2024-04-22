@@ -2,8 +2,11 @@ package com.intern.crm.service.impl;
 
 import com.intern.crm.entity.Opportunity;
 import com.intern.crm.entity.Stage;
+import com.intern.crm.entity.User;
 import com.intern.crm.helper.ExcelHelper;
 import com.intern.crm.payload.model.OpportunityModel;
+import com.intern.crm.payload.model.StageModel;
+import com.intern.crm.payload.model.UserModel;
 import com.intern.crm.payload.request.CreateOpportunityRequest;
 import com.intern.crm.repository.OpportunityRepository;
 import com.intern.crm.repository.StageRepository;
@@ -96,7 +99,7 @@ public class OpportunityServiceImpl implements OpportunityService {
 
         opportunity.setLastModifiedDate(new Date());
 
-        opportunity.setStage(stageRepository.findById(opportunityModel.getStage()).get());
+        opportunity.setStage(stageRepository.findById(opportunityModel.getStage().getId()).get());
 
         opportunityRepository.save(opportunity);
 
@@ -128,12 +131,16 @@ public class OpportunityServiceImpl implements OpportunityService {
         OpportunityModel opportunityModel = modelMapper.map(o, OpportunityModel.class);
 
         if (o.getStage() != null) {
-            opportunityModel.setStage(o.getStage().getId());
-        } else opportunityModel.setStage("");
+            Stage stage = stageRepository.findById(o.getStage().getId()).get();
+            StageModel stageModel = modelMapper.map(stage, StageModel.class);
+            opportunityModel.setStage(stageModel);
+        } else opportunityModel.setStage(null);
 
         if (o.getSalesperson() != null) {
-            opportunityModel.setSalesperson(o.getSalesperson().getId());
-        } else opportunityModel.setSalesperson("");
+            User user = userRepository.findById(o.getSalesperson().getId()).get();
+            UserModel userModel = modelMapper.map(user, UserModel.class);
+            userModel.setAvatar(user.getAvatar().getId());
+        } else opportunityModel.setSalesperson(null);
 
         return opportunityModel;
     }
