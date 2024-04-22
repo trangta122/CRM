@@ -107,8 +107,6 @@ public class ContactServiceImpl implements ContactService {
 
         Page<Contact> contactPage;
         contactPage = contactRepository.findAll(paging);
-
-
         contacts = contactPage.getContent();
 
         List<ContactModel> contactModels = new ArrayList<>();

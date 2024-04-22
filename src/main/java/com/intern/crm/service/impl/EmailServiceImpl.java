@@ -11,8 +11,10 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.PathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -67,7 +69,7 @@ public class EmailServiceImpl implements EmailService {
             TemplateFile attachment = fileRepository.findById(emailRequest.getAttachment()).get();
             String path = "uploads/" + attachment.getPhysicalPath();
 
-            FileSystemResource file = new FileSystemResource(new java.io.File(path));
+            FileSystemResource file = new FileSystemResource(new File(path));
             mimeMessageHelper.addAttachment(file.getFilename(), file);
 
             javaMailSender.send(mimeMessage);
@@ -86,7 +88,7 @@ public class EmailServiceImpl implements EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
                     StandardCharsets.UTF_8.name());
 
-            Template template = configFreemarker.getTemplate("index.html");
+            Template template = configFreemarker.getTemplate("cold-email.html");
             String content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
 
             helper.setTo(sender);
@@ -94,10 +96,8 @@ public class EmailServiceImpl implements EmailService {
             helper.setSubject(emailRequest.getSubject());
             helper.setText(content, true);
 
-            String logoPath = "src/main/resources/static/icon/logo.svg";
-            FileSystemResource fileSystemResource = new FileSystemResource(new File(logoPath));
-            helper.addAttachment(fileSystemResource.getFilename(), fileSystemResource);
-
+            String logoPath = "./static/logo.png";
+            helper.addInline("logo.png", new ClassPathResource(logoPath));
             javaMailSender.send(mimeMessage);
 
             return "Cold email is being sent...";

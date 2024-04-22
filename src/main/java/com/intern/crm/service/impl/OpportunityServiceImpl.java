@@ -157,10 +157,10 @@ public class OpportunityServiceImpl implements OpportunityService {
 
     public OpportunityModel setStageAndSalesperson(Opportunity o) {
         OpportunityModel opportunityModel = modelMapper.map(o, OpportunityModel.class);
-        StageModel stageModel = modelMapper.map(o.getStage(), StageModel.class);
-
 
         if (o.getStage() != null) {
+            Stage stage = stageRepository.findById(o.getStage().getId()).get();
+            StageModel stageModel = modelMapper.map(stage, StageModel.class);
             opportunityModel.setStage(stageModel);
         } else opportunityModel.setStage(null);
 
@@ -173,6 +173,8 @@ public class OpportunityServiceImpl implements OpportunityService {
             userModel.setRole(user.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList()));
 
             opportunityModel.setSalesperson(userModel);
+
+            userModel.setAvatar(user.getAvatar().getId());
 
         } else opportunityModel.setSalesperson(null);
 

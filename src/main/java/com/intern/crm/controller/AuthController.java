@@ -1,9 +1,12 @@
 package com.intern.crm.controller;
 
+import com.intern.crm.entity.User;
+import com.intern.crm.payload.model.UserModel;
 import com.intern.crm.payload.request.ChangePasswordRequest;
 import com.intern.crm.payload.request.ForgotPasswordRequest;
 import com.intern.crm.payload.request.LoginRequest;
 import com.intern.crm.payload.response.JwtResponse;
+import com.intern.crm.repository.UserRepository;
 import com.intern.crm.security.jwt.JwtUtils;
 import com.intern.crm.security.service.UserDetailsImpl;
 import com.intern.crm.service.PasswordService;
@@ -11,7 +14,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +35,10 @@ public class AuthController {
     AuthenticationManager authenticationManager;
     @Autowired
     PasswordService passwordService;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    ModelMapper modelMapper;
     @Autowired
     JwtUtils jwtUtils;
 
@@ -63,6 +72,18 @@ public class AuthController {
         return passwordService.forgotPassword(request);
     }
 
+    @SecurityRequirement(name = "Authorization")
+    @Operation(summary = "Get current user")
+    @GetMapping("/user")
+    public ResponseEntity<?> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findById(((UserDetailsImpl) authentication.getPrincipal()).getId()).get();
+        UserModel userModel = modelMapper.map(user, UserModel.class);
+        List<String> roles = user.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList());
+        userModel.setAvatar(user.getAvatar().getId());
+        userModel.setRole(roles);
+        return ResponseEntity.status(HttpStatus.OK).body(userModel);
+    }
 
 }
 
