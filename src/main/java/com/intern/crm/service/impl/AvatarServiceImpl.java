@@ -58,7 +58,7 @@ public class AvatarServiceImpl implements AvatarService {
 
 
         if (!prevAvatar.equals(defaultAvatar)) {
-            Path path1 = Paths.get("uploads/avatars/" + prevPath);
+            Path path1 = Paths.get(prevPath);
             Files.delete(path1); //delete raw file on server
             avatarRepository.deleteById(prevAvatar); //delete on database
         }
