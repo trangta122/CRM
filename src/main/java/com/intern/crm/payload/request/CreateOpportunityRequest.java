@@ -1,6 +1,7 @@
 package com.intern.crm.payload.request;
 
 public class CreateOpportunityRequest {
+    private String name; //opportunity name
     private String company; //company name
     private String email;
     private String phone;
@@ -56,4 +57,11 @@ public class CreateOpportunityRequest {
         this.revenue = revenue;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

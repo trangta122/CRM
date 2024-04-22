@@ -52,6 +52,7 @@ public class ExcelHelper {
                     switch (cellIndex) {
                         case 0:
                             opportunity.setCompany(currentCell.getStringCellValue());
+                            opportunity.setName(currentCell.getStringCellValue());
                             break;
                         case 1:
                             opportunity.setEmail(currentCell.getStringCellValue());
