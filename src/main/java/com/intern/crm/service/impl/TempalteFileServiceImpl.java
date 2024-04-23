@@ -4,8 +4,6 @@ import com.intern.crm.entity.TemplateFile;
 import com.intern.crm.payload.model.FileModel;
 import com.intern.crm.repository.TemplateFileRepository;
 import com.intern.crm.service.TemplateFileService;
-import com.syncfusion.docio.FormatType;
-import com.syncfusion.docio.WordDocument;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
