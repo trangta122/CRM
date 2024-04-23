@@ -4,6 +4,9 @@ import com.intern.crm.entity.TemplateFile;
 import com.intern.crm.payload.model.FileModel;
 import com.intern.crm.repository.TemplateFileRepository;
 import com.intern.crm.service.TemplateFileService;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -17,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -48,7 +52,27 @@ public class TempalteFileServiceImpl implements TemplateFileService {
 
     @Override
     public void mailMergeQuotation() throws Exception {
+        String input = "uploads/quotation.docx";
+        String output = "uploads/output.docx";
 
+        XWPFDocument document = new XWPFDocument(Files.newInputStream(Paths.get(input)));
+        List<XWPFParagraph> xwpfParagraphList = document.getParagraphs();
+
+        for (XWPFParagraph xwpfParagraph : xwpfParagraphList) {
+            for (XWPFRun xwpfRun : xwpfParagraph.getRuns()) {
+                String docText = xwpfRun.getText(0);
+                if  (docText != null) {
+                    docText = docText.replace("${date}", "23.04.2024");
+                    docText = docText.replace("${product}", "CRM");
+                    docText = docText.replace("${price}", "5232000");
+                }
+
+                xwpfRun.setText(docText, 0);
+            }
+        }
+
+        FileOutputStream outputStream = new FileOutputStream(output);
+        document.write(outputStream);
     }
 
     @Override
