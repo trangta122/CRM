@@ -70,7 +70,6 @@ public class TempalteFileServiceImpl implements TemplateFileService {
                 xwpfRun.setText(docText, 0);
             }
         }
-
         FileOutputStream outputStream = new FileOutputStream(output);
         document.write(outputStream);
     }
