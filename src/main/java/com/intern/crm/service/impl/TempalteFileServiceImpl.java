@@ -63,8 +63,16 @@ public class TempalteFileServiceImpl implements TemplateFileService {
                 String docText = xwpfRun.getText(0);
                 if  (docText != null) {
                     docText = docText.replace("${date}", "23.04.2024");
+                    docText = docText.replace("${company}", "Dalkom Coffee");
+                    docText = docText.replace("${email}", "dalkom@gmail.com");
                     docText = docText.replace("${product}", "CRM");
+                    docText = docText.replace("${description}", "maintaince");
                     docText = docText.replace("${price}", "5232000");
+                    docText = docText.replace("${tax}", "10%");
+                    docText = docText.replace("${amount}", "5232000");
+                    docText = docText.replace("${VAT}", "100000");
+                    docText = docText.replace("${total}", "5232000");
+                    docText = docText.replace("${condition}", "payment");
                 }
 
                 xwpfRun.setText(docText, 0);
