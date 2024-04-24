@@ -4,6 +4,9 @@ import com.intern.crm.entity.TemplateFile;
 import com.intern.crm.payload.model.FileModel;
 import com.intern.crm.repository.TemplateFileRepository;
 import com.intern.crm.service.TemplateFileService;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -53,9 +56,14 @@ public class TempalteFileServiceImpl implements TemplateFileService {
     @Override
     public void mailMergeQuotation() throws Exception {
         String input = "uploads/quotation.docx";
-        String output = "uploads/output.docx";
+        String output = "uploads/output.pdf";
 
         XWPFDocument document = new XWPFDocument(Files.newInputStream(Paths.get(input)));
+        FileOutputStream outputStream = new FileOutputStream(output);
+        Document pdfDocument = new Document();
+        PdfWriter.getInstance(pdfDocument, outputStream);
+        pdfDocument.open();
+
         List<XWPFParagraph> xwpfParagraphList = document.getParagraphs();
 
         for (XWPFParagraph xwpfParagraph : xwpfParagraphList) {
@@ -77,9 +85,12 @@ public class TempalteFileServiceImpl implements TemplateFileService {
 
                 xwpfRun.setText(docText, 0);
             }
+
+            pdfDocument.add(new Paragraph(xwpfParagraph.getText()));
         }
-        FileOutputStream outputStream = new FileOutputStream(output);
-        document.write(outputStream);
+
+        //document.write(outputStream);
+        pdfDocument.close();
     }
 
     @Override
