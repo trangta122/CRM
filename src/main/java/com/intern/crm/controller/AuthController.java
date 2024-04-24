@@ -25,7 +25,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 @CrossOrigin(origins = "*")
 @RestController
@@ -45,7 +47,7 @@ public class AuthController {
 
     @Operation(summary = "Sign in")
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Map<String, Object>> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -56,9 +58,13 @@ public class AuthController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
                 .collect(Collectors.toList());
-
-        return ResponseEntity
-                .ok(new JwtResponse(jwt));
+        User user = userRepository.findById(userDetails.getId()).get();
+        UserModel userModel = modelMapper.map(user, UserModel.class);
+        userModel.setRole(roles);
+        Map<String, Object> data = new HashMap<>();
+        data.put("token", jwt);
+        data.put("user", userModel);
+        return ResponseEntity.status(HttpStatus.OK).body(data);
     }
     @SecurityRequirement(name = "Authorization")
     @Operation(summary = "Change password")
@@ -71,19 +77,6 @@ public class AuthController {
     @PutMapping("/reset-password")
     public String forgotPassword(@RequestBody ForgotPasswordRequest request) {
         return passwordService.forgotPassword(request);
-    }
-
-    @SecurityRequirement(name = "Authorization")
-    @Operation(summary = "Get current user")
-    @GetMapping("/user")
-    public ResponseEntity<?> getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findById(((UserDetailsImpl) authentication.getPrincipal()).getId()).get();
-        UserModel userModel = modelMapper.map(user, UserModel.class);
-        List<String> roles = user.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList());
-        userModel.setAvatar(modelMapper.map(user.getAvatar(), FileModel.class));
-        userModel.setRole(roles);
-        return ResponseEntity.status(HttpStatus.OK).body(userModel);
     }
 
 }
