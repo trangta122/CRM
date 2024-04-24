@@ -7,6 +7,8 @@ import com.intern.crm.service.TemplateFileService;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -56,13 +58,13 @@ public class TempalteFileServiceImpl implements TemplateFileService {
     @Override
     public void mailMergeQuotation() throws Exception {
         String input = "uploads/quotation.docx";
-        String output = "uploads/output.pdf";
+        String output = "uploads/outputtttcccccc.pdf";
 
         XWPFDocument document = new XWPFDocument(Files.newInputStream(Paths.get(input)));
-        FileOutputStream outputStream = new FileOutputStream(output);
-        Document pdfDocument = new Document();
-        PdfWriter.getInstance(pdfDocument, outputStream);
-        pdfDocument.open();
+//        FileOutputStream outputStream = new FileOutputStream(output);
+//        Document pdfDocument = new Document();
+//        PdfWriter.getInstance(pdfDocument, outputStream);
+//        pdfDocument.open();
 
         List<XWPFParagraph> xwpfParagraphList = document.getParagraphs();
 
@@ -86,10 +88,15 @@ public class TempalteFileServiceImpl implements TemplateFileService {
                 xwpfRun.setText(docText, 0);
             }
 
-            pdfDocument.add(new Paragraph(xwpfParagraph.getText()));
+//            pdfDocument.add(new Paragraph(xwpfParagraph.getText()));
         }
 
         //document.write(outputStream);
+        FileOutputStream outputStream = new FileOutputStream(output);
+        Document pdfDocument = new Document();
+//        PdfOptions options = PdfOptions.create();
+//        PdfConverter.getInstance().convert(document, outputStream, options);
+
         pdfDocument.close();
     }
 
