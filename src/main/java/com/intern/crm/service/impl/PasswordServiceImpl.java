@@ -22,7 +22,6 @@ import java.util.Optional;
 public class PasswordServiceImpl implements PasswordService {
     @Autowired
     UserRepository userRepository;
-    UserDetailsImpl userDetails;
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired

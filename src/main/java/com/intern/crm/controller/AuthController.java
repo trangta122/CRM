@@ -11,6 +11,7 @@ import com.intern.crm.repository.UserRepository;
 import com.intern.crm.security.jwt.JwtUtils;
 import com.intern.crm.security.service.UserDetailsImpl;
 import com.intern.crm.service.PasswordService;
+import com.intern.crm.service.impl.PasswordServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -77,6 +78,19 @@ public class AuthController {
     @PutMapping("/reset-password")
     public String forgotPassword(@RequestBody ForgotPasswordRequest request) {
         return passwordService.forgotPassword(request);
+    }
+
+    @SecurityRequirement(name = "Authorization")
+    @Operation(summary = "Get current user")
+    @GetMapping("/user")
+    public ResponseEntity<?> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userRepository.findById(userDetails.getId()).get();
+        UserModel userModel = modelMapper.map(user, UserModel.class);
+        List<String> roles = user.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList());
+        userModel.setRole(roles);
+        return ResponseEntity.status(HttpStatus.OK).body(userModel);
     }
 
 }
