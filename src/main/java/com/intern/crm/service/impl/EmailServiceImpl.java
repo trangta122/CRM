@@ -1,6 +1,5 @@
 package com.intern.crm.service.impl;
 
-import com.intern.crm.configuration.Freemarker;
 import com.intern.crm.entity.TemplateFile;
 import com.intern.crm.payload.request.EmailRequest;
 import com.intern.crm.repository.TemplateFileRepository;
@@ -9,12 +8,12 @@ import freemarker.core.ParseException;
 import freemarker.template.*;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.apache.catalina.LifecycleState;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.PathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -24,6 +23,13 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -114,4 +120,31 @@ public class EmailServiceImpl implements EmailService {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public String sendQuotation(EmailRequest request) throws MessagingException, IOException {
+        Map<String, Object> data = new HashMap<>();
+        data.put("date", request.getExpiration());
+        data.put("company", request.getCompany());
+        data.put("email", request.getRecipient());
+        data.put("product", request.getProduct());
+        data.put("description", request.getDescription());
+        data.put("price", request.getPrice());
+        data.put("tax", request.getTax());
+        data.put("untaxedamount", request.getPrice());
+        data.put("VAT", request.getPrice() * (request.getTax()/100));
+        data.put("total", request.getTotal());
+        data.put("condition", request.getCondition());
+
+        DateFormat dateFormatter = new SimpleDateFormat("yyyyMMddHHmmssSSS_");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String inputFile = "uploads/quotation.docx";
+        String outputFile = "uploads/" + currentDateTime + "_quotation.docx";
+
+        XWPFDocument document = new XWPFDocument(Files.newInputStream(Paths.get(inputFile)));
+
+        return null;
+    }
+
 }

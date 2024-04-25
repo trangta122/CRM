@@ -3,6 +3,7 @@ package com.intern.crm.service;
 import com.intern.crm.payload.request.EmailRequest;
 import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.Map;
 
 public interface EmailService {
@@ -14,4 +15,7 @@ public interface EmailService {
 
     //Send email with template (cold email)
     String sendColdEmail(EmailRequest request, Map<String, Object> model) throws MessagingException;
+
+    //Send quotation
+    String sendQuotation(EmailRequest request) throws MessagingException, IOException;
 }
