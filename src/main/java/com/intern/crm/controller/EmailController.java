@@ -10,6 +10,7 @@ import jdk.jfr.consumer.RecordedMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,5 +43,12 @@ public class EmailController {
         model.put("salesperson", emailRequest.getSalesperson());
         model.put("description", emailRequest.getDescription());
         return emailService.sendColdEmail(emailRequest, model);
+    }
+
+    @Operation(summary = "Send quotation")
+    @PostMapping("/quotation/opportunity/{id}")
+    public String sendQuotationMail(@PathVariable("id") String id,
+                                    @RequestBody EmailRequest request) throws MessagingException, IOException {
+        return emailService.sendQuotation(id, request);
     }
 }

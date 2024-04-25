@@ -33,9 +33,6 @@ public class Opportunity extends Auditable<String> {
     @ManyToOne(fetch = FetchType.LAZY)
     private User salesperson;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private TemplateFile templateFile;
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "opportunity_contacts",
     joinColumns = { @JoinColumn(name = "opportunity_Id")},
@@ -194,13 +191,5 @@ public class Opportunity extends Auditable<String> {
 
     public void setLostReason(String lostReason) {
         this.lostReason = lostReason;
-    }
-
-    public TemplateFile getTemplateFile() {
-        return templateFile;
-    }
-
-    public void setTemplateFile(TemplateFile templateFile) {
-        this.templateFile = templateFile;
     }
 }

@@ -17,5 +17,5 @@ public interface EmailService {
     String sendColdEmail(EmailRequest request, Map<String, Object> model) throws MessagingException;
 
     //Send quotation
-    String sendQuotation(EmailRequest request) throws MessagingException, IOException;
+    String sendQuotation(String id, EmailRequest request) throws MessagingException, IOException;
 }

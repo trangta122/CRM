@@ -18,6 +18,7 @@ public class EmailRequest {
     private String product;
     private Double price;
     private int tax;
+    private Double vat;
     private Double total;
     private String condition;
 
@@ -120,8 +121,16 @@ public class EmailRequest {
         this.tax = tax;
     }
 
+    public Double getVat() {
+        return price * tax/100;
+    }
+
+    public void setVat(Double vat) {
+        this.vat = vat;
+    }
+
     public Double getTotal() {
-        return total*(1 + tax/100);
+        return getPrice() + getVat();
     }
 
     public void setTotal(Double total) {

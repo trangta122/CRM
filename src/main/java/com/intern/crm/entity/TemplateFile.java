@@ -1,5 +1,6 @@
 package com.intern.crm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.intern.crm.audit.Auditable;
 import jakarta.persistence.*;
 
@@ -15,18 +16,18 @@ public class TemplateFile extends Auditable<String> {
     private String physicalPath;
     private Boolean isFile;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Opportunity opportunity;
-
 
     //constructor
     public TemplateFile() {
     }
 
-    public TemplateFile(String name, String type, String physicalPath) {
+    public TemplateFile(String name, String type, String physicalPath, Boolean isFile) {
         this.name = name;
         this.type = type;
         this.physicalPath = physicalPath;
+        this.isFile = isFile;
     }
 
     //getter & setter
