@@ -4,6 +4,11 @@ import com.intern.crm.entity.TemplateFile;
 import com.intern.crm.payload.model.FileModel;
 import com.intern.crm.repository.TemplateFileRepository;
 import com.intern.crm.service.TemplateFileService;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfConverter;
+import fr.opensagres.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -53,9 +58,14 @@ public class TempalteFileServiceImpl implements TemplateFileService {
     @Override
     public void mailMergeQuotation() throws Exception {
         String input = "uploads/quotation.docx";
-        String output = "uploads/output.docx";
+        String output = "uploads/outputtttcccccc.pdf";
 
         XWPFDocument document = new XWPFDocument(Files.newInputStream(Paths.get(input)));
+//        FileOutputStream outputStream = new FileOutputStream(output);
+//        Document pdfDocument = new Document();
+//        PdfWriter.getInstance(pdfDocument, outputStream);
+//        pdfDocument.open();
+
         List<XWPFParagraph> xwpfParagraphList = document.getParagraphs();
 
         for (XWPFParagraph xwpfParagraph : xwpfParagraphList) {
@@ -63,15 +73,31 @@ public class TempalteFileServiceImpl implements TemplateFileService {
                 String docText = xwpfRun.getText(0);
                 if  (docText != null) {
                     docText = docText.replace("${date}", "23.04.2024");
+                    docText = docText.replace("${company}", "Dalkom Coffee");
+                    docText = docText.replace("${email}", "dalkom@gmail.com");
                     docText = docText.replace("${product}", "CRM");
+                    docText = docText.replace("${description}", "maintaince");
                     docText = docText.replace("${price}", "5232000");
+                    docText = docText.replace("${tax}", "10%");
+                    docText = docText.replace("${amount}", "5232000");
+                    docText = docText.replace("${VAT}", "100000");
+                    docText = docText.replace("${total}", "5232000");
+                    docText = docText.replace("${condition}", "payment");
                 }
 
                 xwpfRun.setText(docText, 0);
             }
+
+//            pdfDocument.add(new Paragraph(xwpfParagraph.getText()));
         }
+
+        //document.write(outputStream);
         FileOutputStream outputStream = new FileOutputStream(output);
-        document.write(outputStream);
+        Document pdfDocument = new Document();
+//        PdfOptions options = PdfOptions.create();
+//        PdfConverter.getInstance().convert(document, outputStream, options);
+
+        pdfDocument.close();
     }
 
     @Override
