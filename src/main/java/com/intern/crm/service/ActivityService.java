@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface ActivityService {
     //Add an activity for an opportunity by Opportunity's ID
-    Activity createActivity(CreateActivityRequest request, String id, String type);
+    void createActivity(String id, CreateActivityRequest request);
 
     //Retrieve all activities
     List<ActivityModel> listAllActivities();

@@ -26,12 +26,11 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     ModelMapper modelMapper;
     @Override
-    public Activity createActivity(CreateActivityRequest request, String id, String type) {
+    public void createActivity(String id, CreateActivityRequest request) {
         Opportunity opportunity = opportunityRepository.findById(id).get();
         Activity activity = modelMapper.map(request, Activity.class);
-        activity.setType(type);
         activity.setOpportunity(opportunity);
-        return activityRepository.save(activity);
+        activityRepository.save(activity);
     }
 
     @Override
@@ -45,7 +44,6 @@ public class ActivityServiceImpl implements ActivityService {
     public ActivityModel getActivityById(String id) {
         Activity activity = activityRepository.findById(id).get();
         ActivityModel activityModel = modelMapper.map(activity, ActivityModel.class);
-        activityModel.setOpportunityId(activity.getOpportunity().getId());
         return activityModel;
     }
 
@@ -84,7 +82,6 @@ public class ActivityServiceImpl implements ActivityService {
         activity.setLastModifiedDate(new Date());
         activityRepository.save(activity);
         ActivityModel activityModel = modelMapper.map(activity, ActivityModel.class);
-        activityModel.setOpportunityId(activity.getOpportunity().getId());
         return activityModel;
     }
 
@@ -92,7 +89,6 @@ public class ActivityServiceImpl implements ActivityService {
         List<ActivityModel> activityModels = new ArrayList<>();
         for (Activity activity : activities) {
             ActivityModel activityModel = modelMapper.map(activity, ActivityModel.class);
-            activityModel.setOpportunityId(activity.getOpportunity().getId());
             activityModels.add(activityModel);
         }
 

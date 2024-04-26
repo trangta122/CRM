@@ -1,5 +1,6 @@
 package com.intern.crm.service.impl;
 
+import com.intern.crm.entity.Activity;
 import com.intern.crm.entity.Opportunity;
 import com.intern.crm.entity.TemplateFile;
 import com.intern.crm.payload.request.EmailRequest;
@@ -172,7 +173,7 @@ public class EmailServiceImpl implements EmailService {
         document.write(outputStream);
 
         //save output docx file information on database
-        TemplateFile file = new TemplateFile("quotation", "docx", "/"+outputFile, true);
+        TemplateFile file = new TemplateFile(currentDateTime + "quotation", "docx", "/"+outputFile, true);
         file.setOpportunity(opportunity);
         fileRepository.save(file);
 
@@ -196,7 +197,11 @@ public class EmailServiceImpl implements EmailService {
             helper.addAttachment(resource.getFilename(), resource);
             javaMailSender.send(mimeMessage);
 
-            return "Quotaion is being sent...";
+            //Log send quotation activity
+            String detail = "Quotation sent: " + file.getName();
+            Activity activity = new Activity("Auto-log", detail, new Date(), false);
+
+            return "Quotaion email is being sent...";
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         } catch (TemplateException e) {

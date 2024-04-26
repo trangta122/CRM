@@ -7,7 +7,7 @@ public class ActivityModel {
     private String type;
     private String detail;
     private Date date;
-    private String opportunityId;
+    private boolean isDone;
 
     public String getId() {
         return id;
@@ -41,11 +41,11 @@ public class ActivityModel {
         this.date = date;
     }
 
-    public String getOpportunityId() {
-        return opportunityId;
+    public boolean isDone() {
+        return isDone;
     }
 
-    public void setOpportunityId(String opportunityId) {
-        this.opportunityId = opportunityId;
+    public void setDone(boolean done) {
+        isDone = done;
     }
 }

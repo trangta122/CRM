@@ -64,7 +64,7 @@ public class StageServiceImpl implements StageService {
         List<OpportunityModel> opportunityModels = new ArrayList<>();
 
         for (Opportunity opportunity : opportunities) {
-            OpportunityModel opportunityModel = modelMapper.map(opportunityService.setStageAndSalesperson(opportunity), OpportunityModel.class);
+            OpportunityModel opportunityModel = modelMapper.map(opportunityService.mapOpportunity(opportunity), OpportunityModel.class);
             opportunityModels.add(opportunityModel);
         }
         return opportunityModels;

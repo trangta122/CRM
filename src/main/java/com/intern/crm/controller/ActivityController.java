@@ -25,12 +25,9 @@ public class ActivityController {
 
     @Operation(summary = "Add an activity for an opportunity")
     @PostMapping("/opportunity/{id}")
-    public ResponseEntity<?> addActivity(
-            @PathVariable("id") String id,
-            @RequestBody CreateActivityRequest request,
-            @RequestParam(defaultValue = "manual") String type) {
-        activityService.createActivity(request, id, type);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Create an activity successfully for opportunity ID: " + id));
+    public ResponseEntity<?> addActivity(@PathVariable("id") String id, @RequestBody CreateActivityRequest request){
+        activityService.createActivity(id, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Create a planned activity successfully."));
     }
 
     @Operation(summary = "Retrieve all activities")

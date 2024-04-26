@@ -1,5 +1,6 @@
 package com.intern.crm.service.impl;
 
+import com.intern.crm.entity.Activity;
 import com.intern.crm.entity.Opportunity;
 import com.intern.crm.entity.Stage;
 import com.intern.crm.entity.User;
@@ -24,6 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,13 +42,14 @@ public class OpportunityServiceImpl implements OpportunityService {
     ModelMapper modelMapper;
     @Value("${crm.app.lost}")
     private String lostId;
-
+    DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
     @Override
     public Opportunity createOpportunity(CreateOpportunityRequest opportunityModel, String stageId, Boolean isCustomer) {
         Stage stage = stageRepository.findById(stageId).get();
         Opportunity opportunity = modelMapper.map(opportunityModel, Opportunity.class);
         opportunity.setStage(stage);
         opportunity.setCustomer(isCustomer);
+        opportunity.setProbability((float) 0);
         return opportunityRepository.save(opportunity);
     }
 
@@ -67,7 +71,7 @@ public class OpportunityServiceImpl implements OpportunityService {
         List<OpportunityModel> opportunityModels = new ArrayList<>();
 
         for (Opportunity opportunity : opportunities) {
-            opportunityModels.add(setStageAndSalesperson(opportunity));
+            opportunityModels.add(mapOpportunity(opportunity));
         }
         return opportunityModels;
     }
@@ -75,18 +79,46 @@ public class OpportunityServiceImpl implements OpportunityService {
     @Override
     public OpportunityModel findOpportunityById(String id) {
         Opportunity opportunity = opportunityRepository.findById(id).get();
-        return setStageAndSalesperson(opportunity);
+        return mapOpportunity(opportunity);
     }
 
     @Override
     public OpportunityModel updateOpportunity(OpportunityModel opportunityModel, String opportunityId) {
+        String detail;
         Opportunity opportunity = opportunityRepository.findById(opportunityId).get();
 
-        //update stage's revenue
-//        Stage stage = stageRepository.findById(opportunity.getStage().getId()).get();
-//        stage.setRevenue(stage.getRevenue() + opportunityModel.getRevenue() - opportunity.getRevenue());
-//        stage.setLastModifiedDate(new Date());
-//        stageRepository.save(stage);
+        //Update stage's revenue
+        Stage stage = stageRepository.findById(opportunity.getStage().getId()).get();
+        stage.setRevenue(stage.getRevenue() + opportunityModel.getRevenue() - opportunity.getRevenue());
+        stage.setLastModifiedDate(new Date());
+        stageRepository.save(stage);
+
+        //Log stage changed
+        if (opportunity.getStage().getName() != opportunityModel.getStage().getName()) {
+            detail = "Stage changed: " + opportunity.getStage().getName() + " -> " + opportunityModel.getStage().getName();
+            Activity activity = new Activity("Auto-log", detail, new Date(), false);
+        }
+
+        //Log expected revenue changed
+        if (opportunity.getRevenue() != opportunityModel.getRevenue()) {
+            detail = "Expected revenue changed " + opportunity.getRevenue()  + " -> " + opportunityModel.getRevenue() + "VND";
+            Activity activity = new Activity("Auto-log", detail, new Date(), false);
+        }
+
+        //Log probability changed
+        if (opportunity.getProbability() != opportunityModel.getProbability()) {
+            detail = "Probability changed: " + opportunity.getProbability() + " -> " + opportunityModel.getProbability();
+            Activity activity = new Activity("Auto-log", detail, new Date(), false);
+        }
+
+        //Log salesperson changed
+        if (opportunity.getSalesperson() == null) {
+            detail = "Salesperson changed: None -> " + opportunityModel.getSalesperson().getFullname();
+            Activity activity = new Activity("Auto-log", detail, new Date(), false);
+        } else if (opportunity.getSalesperson().getId() != opportunityModel.getSalesperson().getId()) {
+            detail = "Salesperson changed: " + opportunity.getSalesperson().getFullname() + " -> " + opportunityModel.getSalesperson().getFullname();
+            Activity activity = new Activity("Auto-log", detail, new Date(), false);
+        }
 
         opportunity.setName(opportunityModel.getName());
         opportunity.setEmail(opportunityModel.getEmail());
@@ -99,16 +131,14 @@ public class OpportunityServiceImpl implements OpportunityService {
         opportunity.setCompany(opportunityModel.getCompany());
         opportunity.setProbability(opportunityModel.getProbability());
         opportunity.setLostReason(opportunityModel.getLostReason());
-
         opportunity.setLastModifiedDate(new Date());
 
         //set stage
-        Stage stage = stageRepository.findById(opportunityModel.getStage().getId()).get();
-        opportunity.setStage(stage);
+        opportunity.setStage(stageRepository.findById(opportunityModel.getStage().getId()).get());
 
         opportunityRepository.save(opportunity);
 
-        return setStageAndSalesperson(opportunity);
+        return mapOpportunity(opportunity);
     }
 
     @Override
@@ -117,7 +147,7 @@ public class OpportunityServiceImpl implements OpportunityService {
         opportunity.setSalesperson(userRepository.findById(userId).get());
         opportunity.setLastModifiedDate(new Date());
         opportunityRepository.save(opportunity);
-        return setStageAndSalesperson(opportunity);
+        return mapOpportunity(opportunity);
     }
 
     @Override
@@ -126,7 +156,7 @@ public class OpportunityServiceImpl implements OpportunityService {
         List<OpportunityModel> opportunityModels = new ArrayList<>();
 
         for (Opportunity opportunity : opportunities) {
-            opportunityModels.add(setStageAndSalesperson(opportunity));
+            opportunityModels.add(mapOpportunity(opportunity));
         }
         return opportunityModels;
     }
@@ -143,7 +173,7 @@ public class OpportunityServiceImpl implements OpportunityService {
 
         List<OpportunityModel> opportunityModels = new ArrayList<>();
         for (Opportunity opportunity : opportunities) {
-            opportunityModels.add(setStageAndSalesperson(opportunity));
+            opportunityModels.add(mapOpportunity(opportunity));
         }
 
         Map<String, Object> response = new HashMap<>();
@@ -156,29 +186,18 @@ public class OpportunityServiceImpl implements OpportunityService {
     }
 
 
-    public OpportunityModel setStageAndSalesperson(Opportunity o) {
+    public OpportunityModel mapOpportunity(Opportunity o) {
         OpportunityModel opportunityModel = modelMapper.map(o, OpportunityModel.class);
-
-        if (o.getStage() != null) {
-            Stage stage = stageRepository.findById(o.getStage().getId()).get();
-            StageModel stageModel = modelMapper.map(stage, StageModel.class);
-            opportunityModel.setStage(stageModel);
-        } else opportunityModel.setStage(null);
-
         if (o.getSalesperson() != null) {
             User user = userRepository.findById(o.getSalesperson().getId()).get();
             UserModel userModel = modelMapper.map(user, UserModel.class);
-            userModel.setAvatar(modelMapper.map(user.getAvatar(), FileModel.class)); //set Avatar ID for User model
 
             //Set list roles for User model
             userModel.setRole(user.getRoles().stream().map(e -> modelMapper.map(e.getName(), String.class)).collect(Collectors.toList()));
 
             opportunityModel.setSalesperson(userModel);
 
-            userModel.setAvatar(modelMapper.map(user.getAvatar(), FileModel.class));
-
-        } else opportunityModel.setSalesperson(null);
-
+        }
         return opportunityModel;
     }
 }

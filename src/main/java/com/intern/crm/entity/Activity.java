@@ -13,9 +13,10 @@ public class Activity extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String type; // auto - default: manual
+    private String type;
     private String detail;
     private Date date;
+    private boolean isDone = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "opportunity_id")
@@ -25,10 +26,11 @@ public class Activity extends Auditable<String> {
     public Activity() {
     }
 
-    public Activity(String type, String detail, Date date) {
+    public Activity(String type, String detail, Date date, boolean isDone) {
         this.type = type;
         this.detail = detail;
         this.date = date;
+        this.isDone = isDone;
     }
 
     public String getId() {
@@ -61,6 +63,14 @@ public class Activity extends Auditable<String> {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public void setDone(boolean done) {
+        isDone = done;
     }
 
     public Opportunity getOpportunity() {
