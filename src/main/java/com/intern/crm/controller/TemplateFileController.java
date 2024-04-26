@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+
 @CrossOrigin(origins = "*")
 @Tag(name = "File")
 @SecurityRequirement(name = "Authorization")
@@ -28,14 +30,8 @@ public class TemplateFileController {
     @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> uploadFile(@RequestPart MultipartFile file,
                                         @RequestParam(value = "isFile", defaultValue = "false") boolean isFile) throws JsonMappingException, JsonProcessingException {
-        fileService.saveFile(file, isFile);
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("Upload successfully."));
-    }
 
-    @PostMapping("/mailmerge")
-    public ResponseEntity<?> mailmerge() throws Exception {
-        fileService.mailMergeQuotation();
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("Mail merge successfully"));
+        return ResponseEntity.status(HttpStatus.OK).body(fileService.saveFile(file, isFile));
     }
 
     @Operation(summary = "Download a file by File's ID")

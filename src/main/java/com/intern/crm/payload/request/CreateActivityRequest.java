@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class CreateActivityRequest {
     private String type;
-    private String detail;
+    private String summary;
     private Date date;
     private boolean isDone;
 
@@ -24,12 +24,12 @@ public class CreateActivityRequest {
         isDone = done;
     }
 
-    public String getDetail() {
-        return detail;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setDetail(String detail) {
-        this.detail = detail;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public Date getDate() {

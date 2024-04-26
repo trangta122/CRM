@@ -9,10 +9,7 @@ import java.util.Map;
 
 public interface TemplateFileService {
     //Upload a file
-    void saveFile(MultipartFile file, boolean isFile);
-
-    //Mail merge data to quotation
-    void mailMergeQuotation() throws Exception;
+    String saveFile(MultipartFile file, boolean isFile);
 
     //Download a file
     Resource downloadFile(String id) throws Exception;

@@ -22,7 +22,7 @@ public interface OpportunityService {
     OpportunityModel findOpportunityById(String id);
 
     //update: edit information, convert stage
-    OpportunityModel updateOpportunity(OpportunityModel opportunity, String opportunityId);
+    OpportunityModel updateOpportunity(OpportunityModel opportunity, String opportunityId, String stageId);
 
     //Assign user (salesperson) to take care of opportunity
     OpportunityModel assignSalesperson(String opportunityId, String userId);

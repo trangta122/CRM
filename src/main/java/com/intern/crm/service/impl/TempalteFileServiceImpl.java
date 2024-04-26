@@ -1,5 +1,6 @@
 package com.intern.crm.service.impl;
 
+import com.intern.crm.controller.TemplateFileController;
 import com.intern.crm.entity.TemplateFile;
 import com.intern.crm.payload.model.FileModel;
 import com.intern.crm.repository.TemplateFileRepository;
@@ -22,6 +23,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,73 +42,6 @@ public class TempalteFileServiceImpl implements TemplateFileService {
     TemplateFileRepository fileRepository;
     @Autowired
     ModelMapper modelMapper;
-
-    @Override
-    public void saveFile(MultipartFile file, boolean isFile) {
-        DateFormat dateFormatter = new SimpleDateFormat("yyyyMMddHHmmssSSS_");
-        String currentDateTime = dateFormatter.format(new Date());
-        String path = currentDateTime + file.getOriginalFilename();
-        saveAs(file, path ); //save raw file to server
-
-        TemplateFile f = new TemplateFile();
-        f.setName(file.getOriginalFilename());
-        f.setType(file.getContentType());
-        f.setPhysicalPath(path);
-        f.setIsFile(isFile);
-        fileRepository.save(f); //save ìnformation of file (name, type, path) to database
-    }
-
-    @Override
-    public void mailMergeQuotation() throws Exception {
-        String input = "uploads/quotation.docx";
-        String output = "uploads/outputtttcccccc.pdf";
-
-        XWPFDocument document = new XWPFDocument(Files.newInputStream(Paths.get(input)));
-//        FileOutputStream outputStream = new FileOutputStream(output);
-//        Document pdfDocument = new Document();
-//        PdfWriter.getInstance(pdfDocument, outputStream);
-//        pdfDocument.open();
-
-        List<XWPFParagraph> xwpfParagraphList = document.getParagraphs();
-
-        for (XWPFParagraph xwpfParagraph : xwpfParagraphList) {
-            for (XWPFRun xwpfRun : xwpfParagraph.getRuns()) {
-                String docText = xwpfRun.getText(0);
-                if  (docText != null) {
-                    docText = docText.replace("${date}", "23.04.2024");
-                    docText = docText.replace("${company}", "Dalkom Coffee");
-                    docText = docText.replace("${email}", "dalkom@gmail.com");
-                    docText = docText.replace("${product}", "CRM");
-                    docText = docText.replace("${description}", "maintaince");
-                    docText = docText.replace("${price}", "5232000");
-                    docText = docText.replace("${tax}", "10%");
-                    docText = docText.replace("${amount}", "5232000");
-                    docText = docText.replace("${VAT}", "100000");
-                    docText = docText.replace("${total}", "5232000");
-                    docText = docText.replace("${condition}", "payment");
-                }
-
-                xwpfRun.setText(docText, 0);
-            }
-
-//            pdfDocument.add(new Paragraph(xwpfParagraph.getText()));
-        }
-
-        //document.write(outputStream);
-        FileOutputStream outputStream = new FileOutputStream(output);
-        Document pdfDocument = new Document();
-//        PdfOptions options = PdfOptions.create();
-//        PdfConverter.getInstance().convert(document, outputStream, options);
-
-        pdfDocument.close();
-    }
-
-    @Override
-    public Resource downloadFile(String id) throws Exception {
-        TemplateFile file = fileRepository.findById(id).orElseThrow(() -> new Exception("File not found"));
-        return load(file.getPhysicalPath());
-    }
-
     @Override
     public Map<String, Object> pagination(int page, int size, String sortBy) {
         List<TemplateFile> files = new ArrayList<>();
@@ -133,12 +69,39 @@ public class TempalteFileServiceImpl implements TemplateFileService {
     }
 
     @Override
+    public String saveFile(MultipartFile file, boolean isFile) {
+        DateFormat dateFormatter = new SimpleDateFormat("yyyyMMddHHmmssSSS_");
+        String currentDateTime = dateFormatter.format(new Date());
+        String path = currentDateTime + file.getOriginalFilename();
+        saveAs(file, path ); //save raw file to server
+
+        TemplateFile f = new TemplateFile();
+        f.setName(path);
+        f.setType(file.getContentType());
+        f.setPhysicalPath("/uploads/" + path);
+        f.setIsFile(isFile);
+        fileRepository.save(f); //save ìnformation of file (name, type, path) to database
+        String url = MvcUriComponentsBuilder.fromMethodName(
+                TemplateFileController.class, "downloadFile", f.getId().toString()).build().toString();
+        String downloadLink = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/files/download/")
+                .path(f.getId())
+                .toUriString();
+        return "Upload file successfully.";
+    }
+
+    @Override
+    public Resource downloadFile(String id) throws Exception {
+        TemplateFile file = fileRepository.findById(id).orElseThrow(() -> new Exception("File not found"));
+        return load(file.getName());
+    }
+
+    @Override
     public FileModel getFileById(String id) {
         TemplateFile file = fileRepository.findById(id).get();
         FileModel fileModel = modelMapper.map(file, FileModel.class);
         return fileModel;
     }
-
 
     public Resource load(String filename) {
         try {

@@ -2,6 +2,7 @@ package com.intern.crm.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.intern.crm.audit.Auditable;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -14,9 +15,10 @@ public class Activity extends Auditable<String> {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     private String type;
+    private String summary;
     private String detail;
     private Date date;
-    private boolean isDone = false;
+    private Boolean isDone = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "opportunity_id")
@@ -71,6 +73,14 @@ public class Activity extends Auditable<String> {
 
     public void setDone(boolean done) {
         isDone = done;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public Opportunity getOpportunity() {

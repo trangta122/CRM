@@ -5,6 +5,7 @@ import java.util.Date;
 public class ActivityModel {
     private String id;
     private String type;
+    private String summary;
     private String detail;
     private Date date;
     private boolean isDone;
@@ -47,5 +48,13 @@ public class ActivityModel {
 
     public void setDone(boolean done) {
         isDone = done;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }
