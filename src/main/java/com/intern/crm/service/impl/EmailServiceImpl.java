@@ -7,6 +7,8 @@ import com.intern.crm.payload.request.EmailRequest;
 import com.intern.crm.repository.OpportunityRepository;
 import com.intern.crm.repository.TemplateFileRepository;
 import com.intern.crm.service.EmailService;
+import com.spire.doc.Document;
+import com.spire.doc.FileFormat;
 import freemarker.core.ParseException;
 import freemarker.template.*;
 import jakarta.mail.MessagingException;
@@ -140,44 +142,55 @@ public class EmailServiceImpl implements EmailService {
         DateFormat dateFormatter = new SimpleDateFormat("yyyyMMddHHmmssSSS_");
         String currentDateTime = dateFormatter.format(new Date());
 
-        String inputFile = "uploads/quotation.docx";
-        String outputFile = "uploads/" + currentDateTime + "quotation.docx";
+        String inputFile = "uploads/quotation-copy.docx";
+        String outputFile = currentDateTime + "quotation.pdf";
+        String outputFilePath = "uploads/" + outputFile;
 
-        XWPFDocument document = new XWPFDocument(Files.newInputStream(Paths.get(inputFile)));
-        List<XWPFParagraph> paragraphs = document.getParagraphs();
+        String [] fieldNames = new String[] {
+                "date",
+                "company",
+                "email",
+                "address",
+                "product",
+                "description",
+                "price",
+                "tax",
+                "amount",
+                "VAT",
+                "total",
+                "condition",
+                "fullname",
+                "contact"
+        };
 
-        for (XWPFParagraph paragraph : paragraphs) {
-            for (XWPFRun run : paragraph.getRuns()) {
-                String docText = run.getText(0);
-                if  (docText != null) {
-                    docText = docText.replace("${date}", dateFormat(emailRequest.getExpiration()));
-                    docText = docText.replace("${company}", opportunity.getCompany());
-                    docText = docText.replace("${email}", opportunity.getEmail());
-                    docText = docText.replace("${address}", opportunity.getAddress());
-                    docText = docText.replace("${product}", emailRequest.getProduct());
-                    docText = docText.replace("${description}", emailRequest.getDescription());
-                    docText = docText.replace("${price}", numberFormat(emailRequest.getPrice()));
-                    docText = docText.replace("${tax}", numberFormat(emailRequest.getTax()));
-                    docText = docText.replace("${amount}", numberFormat(emailRequest.getPrice()));
-                    docText = docText.replace("${VAT}", numberFormat(emailRequest.getVat()));
-                    docText = docText.replace("${total}", numberFormat(emailRequest.getTotal()));
-                    docText = docText.replace("${condition}", emailRequest.getCondition());
-                    docText = docText.replace("${fullname}", opportunity.getSalesperson().getFullname());
-                    docText = docText.replace("${contact}", opportunity.getSalesperson().getEmail());
-                }
-                run.setText(docText, 0);
-            }
-        }
+        String [] fieldValues = new String[] {
+                dateFormat(emailRequest.getExpiration()),
+                opportunity.getCompany(),
+                opportunity.getEmail(),
+                opportunity.getAddress(),
+                emailRequest.getProduct(),
+                emailRequest.getDescription(),
+                numberFormat(emailRequest.getPrice()),
+                numberFormat(emailRequest.getTax()),
+                numberFormat(emailRequest.getPrice()),
+                numberFormat(emailRequest.getVat()),
+                numberFormat(emailRequest.getTotal()),
+                emailRequest.getCondition(),
+                opportunity.getSalesperson().getFullname(),
+                opportunity.getSalesperson().getEmail()
+        };
 
-        FileOutputStream outputStream = new FileOutputStream(outputFile);
-        document.write(outputStream);
+        Document document = new Document();
+        document.loadFromFile(inputFile);
+        document.getMailMerge().execute(fieldNames, fieldValues);
+        document.saveToFile(outputFilePath, FileFormat.PDF);
 
         //save output docx file information on database
-        TemplateFile file = new TemplateFile(currentDateTime + "quotation", "docx", "/"+outputFile, true);
+        TemplateFile file = new TemplateFile(outputFile, "PDF", outputFilePath, true);
         file.setOpportunity(opportunity);
         fileRepository.save(file);
 
-        //Send email attach quoatation file
+        //Send email attach quotation file
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         Map<String, String> data = new HashMap<>();
@@ -193,7 +206,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setSubject("Quotation from Blossom");
             helper.setText(content, true);
 
-            FileSystemResource resource = new FileSystemResource(new File(outputFile));
+            FileSystemResource resource = new FileSystemResource(new File(outputFilePath));
             helper.addAttachment(resource.getFilename(), resource);
             javaMailSender.send(mimeMessage);
 

@@ -1,6 +1,8 @@
 package com.intern.crm;
 
 
+import com.spire.doc.Document;
+import com.spire.doc.FileFormat;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
