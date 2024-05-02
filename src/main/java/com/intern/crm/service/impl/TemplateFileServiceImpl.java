@@ -18,9 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,70 +26,33 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class TempalteFileServiceImpl implements TemplateFileService {
+public class TemplateFileServiceImpl implements TemplateFileService {
     @Autowired
     TemplateFileRepository fileRepository;
     @Autowired
     ModelMapper modelMapper;
-    @Override
-    public Map<String, Object> pagination(int page, int size, String sortBy) {
-        List<TemplateFile> files = new ArrayList<>();
-
-        Pageable paging = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-        Page<TemplateFile> filePage;
-
-        filePage = fileRepository.findAll(paging);
-        files = filePage.getContent();
-
-        List<FileModel> fileModels = new ArrayList<>();
-
-        for (TemplateFile file : files) {
-            FileModel fileModel = modelMapper.map(file, FileModel.class);
-            fileModels.add(fileModel);
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("contacts", fileModels);
-        response.put("currentPage", filePage.getNumber());
-        response.put("totalItems", filePage.getTotalElements());
-        response.put("totalPages", filePage.getTotalPages());
-
-        return response;
-    }
 
     @Override
-    public String saveFile(MultipartFile file, boolean isFile) {
+    public FileModel saveTemplate(MultipartFile file) {
         DateFormat dateFormatter = new SimpleDateFormat("yyyyMMddHHmmssSSS_");
         String currentDateTime = dateFormatter.format(new Date());
         String path = currentDateTime + file.getOriginalFilename();
         saveAs(file, path ); //save raw file to server
 
-        TemplateFile f = new TemplateFile();
-        f.setName(path);
-        f.setType(file.getContentType());
-        f.setPhysicalPath("/uploads/" + path);
-        f.setIsFile(isFile);
-        fileRepository.save(f); //save ìnformation of file (name, type, path) to database
-        String url = MvcUriComponentsBuilder.fromMethodName(
-                TemplateFileController.class, "downloadFile", f.getId().toString()).build().toString();
-        String downloadLink = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/files/download/")
-                .path(f.getId())
-                .toUriString();
-        return "Upload file successfully.";
+        TemplateFile template = new TemplateFile();
+        template.setName(path);
+        template.setType(file.getContentType());
+        template.setPhysicalPath("uploads/" + path);
+        template.setTemplate(true);
+        fileRepository.save(template); //save ìnformation of file (name, type, path) to database
+
+        return modelMapper.map(template, FileModel.class);
     }
 
     @Override
     public Resource downloadFile(String id) throws Exception {
         TemplateFile file = fileRepository.findById(id).orElseThrow(() -> new Exception("File not found"));
         return load(file.getName());
-    }
-
-    @Override
-    public FileModel getFileById(String id) {
-        TemplateFile file = fileRepository.findById(id).get();
-        FileModel fileModel = modelMapper.map(file, FileModel.class);
-        return fileModel;
     }
 
     public Resource load(String filename) {

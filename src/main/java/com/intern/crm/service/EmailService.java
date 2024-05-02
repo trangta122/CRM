@@ -11,10 +11,10 @@ public interface EmailService {
     String sendSimpleEmail(EmailRequest emailRequest);
 
     //Send email with an attachment
-    String sendEmailWithAttachment(EmailRequest emailRequest);
+    String sendEmailWithAttachment(EmailRequest emailRequest) throws IOException;
 
     //Send email with template (cold email)
-    String sendColdEmail(EmailRequest request, Map<String, Object> model) throws MessagingException;
+    String sendColdEmail(EmailRequest request) throws MessagingException;
 
     //Send quotation
     String sendQuotation(String id, EmailRequest request) throws MessagingException, IOException;

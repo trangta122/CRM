@@ -14,7 +14,7 @@ public class TemplateFile extends Auditable<String> {
     private String name;
     private String type;
     private String physicalPath;
-    private Boolean isFile;
+    private Boolean isTemplate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Opportunity opportunity;
@@ -23,11 +23,11 @@ public class TemplateFile extends Auditable<String> {
     public TemplateFile() {
     }
 
-    public TemplateFile(String name, String type, String physicalPath, Boolean isFile) {
+    public TemplateFile(String name, String type, String physicalPath, Boolean isTemplate) {
         this.name = name;
         this.type = type;
         this.physicalPath = physicalPath;
-        this.isFile = isFile;
+        this.isTemplate = isTemplate;
     }
 
     //getter & setter
@@ -71,11 +71,11 @@ public class TemplateFile extends Auditable<String> {
         this.opportunity = opportunity;
     }
 
-    public Boolean getIsFile() {
-        return isFile;
+    public Boolean getTemplate() {
+        return isTemplate;
     }
 
-    public void setIsFile(Boolean file) {
-        isFile = file;
+    public void setTemplate(Boolean template) {
+        isTemplate = template;
     }
 }

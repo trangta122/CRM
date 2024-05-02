@@ -31,18 +31,14 @@ public class EmailController {
 
     @Operation(summary = "Send an email with an attachment")
     @PostMapping("/attachment")
-    public String sendEmailWithAttachment(@RequestBody EmailRequest request) {
+    public String sendEmailWithAttachment(@RequestBody EmailRequest request) throws IOException {
         return emailService.sendEmailWithAttachment(request);
     }
 
     @Operation(summary = "Send email with template", description = "Send cold email")
     @PostMapping("/template")
     public String sendTemplateMail(@RequestBody EmailRequest emailRequest) throws MessagingException {
-        Map<String, Object> model = new HashMap<>();
-        model.put("company", emailRequest.getCompany());
-        model.put("salesperson", emailRequest.getSalesperson());
-        model.put("description", emailRequest.getDescription());
-        return emailService.sendColdEmail(emailRequest, model);
+        return emailService.sendColdEmail(emailRequest);
     }
 
     @Operation(summary = "Send quotation")
