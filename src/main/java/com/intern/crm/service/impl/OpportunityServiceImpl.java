@@ -113,7 +113,7 @@ public class OpportunityServiceImpl implements OpportunityService {
 
         //Log expected revenue changed
         if (!opportunity.getRevenue().equals(opportunityModel.getRevenue()) ) {
-            detail = "Expected revenue changed " + new DecimalFormat("0").format(opportunity.getRevenue()) + " VND"  + " -> " + new DecimalFormat("0").format(opportunityModel.getRevenue()) + " VND";
+            detail = "Expected revenue changed: " + new DecimalFormat("0").format(opportunity.getRevenue()) + " VND"  + " -> " + new DecimalFormat("0").format(opportunityModel.getRevenue()) + " VND";
             saveActivity(opportunityId, detail);
         }
 
