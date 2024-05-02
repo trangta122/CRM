@@ -14,7 +14,7 @@ public interface EmailService {
     String sendEmailWithAttachment(EmailRequest emailRequest) throws IOException;
 
     //Send email with template (cold email)
-    String sendColdEmail(EmailRequest request) throws MessagingException;
+    String sendColdEmail(String templateId, String opportunityId, EmailRequest request) throws MessagingException;
 
     //Send quotation
     String sendQuotation(String id, EmailRequest request) throws MessagingException, IOException;

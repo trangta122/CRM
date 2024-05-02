@@ -46,11 +46,11 @@ public class OpportunityServiceImpl implements OpportunityService {
     private String lostId;
     DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
     @Override
-    public Opportunity createOpportunity(CreateOpportunityRequest opportunityModel, String stageId, Boolean isCustomer) {
-        Stage stage = stageRepository.findById(stageId).get();
+    public Opportunity createOpportunity(CreateOpportunityRequest opportunityModel) {
+        Stage stage = stageRepository.findById(opportunityModel.getStageId()).get();
         Opportunity opportunity = modelMapper.map(opportunityModel, Opportunity.class);
         opportunity.setStage(stage);
-        opportunity.setCustomer(isCustomer);
+        opportunity.setCustomer(opportunityModel.isCustomer());
         opportunity.setProbability((float) 0);
         return opportunityRepository.save(opportunity);
     }

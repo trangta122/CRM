@@ -1,6 +1,7 @@
 package com.intern.crm.entity;
 
 import com.intern.crm.audit.Auditable;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,13 +17,9 @@ public class Stage extends Auditable<String> {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String code = String.valueOf(UUID.randomUUID());
-
-    @NotBlank
     private String name;
-    @NotNull
     private Double revenue; //total expected revenue group by StageID
-
+    private int order;
     //constructor
     public Stage() {
     }
@@ -55,5 +52,13 @@ public class Stage extends Auditable<String> {
 
     public void setRevenue(Double revenue) {
         this.revenue = revenue;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

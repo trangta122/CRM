@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface OpportunityService {
     //create a new opportunity
-    Opportunity createOpportunity(CreateOpportunityRequest model, String stageId, Boolean isCustomer);
+    Opportunity createOpportunity(CreateOpportunityRequest model);
 
     //create many opportunities by import Excel file
     void importExcel(MultipartFile file);

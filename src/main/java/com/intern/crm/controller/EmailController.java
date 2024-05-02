@@ -36,9 +36,11 @@ public class EmailController {
     }
 
     @Operation(summary = "Send email with template", description = "Send cold email")
-    @PostMapping("/template")
-    public String sendTemplateMail(@RequestBody EmailRequest emailRequest) throws MessagingException {
-        return emailService.sendColdEmail(emailRequest);
+    @PostMapping("/template/{templateId}/opportunity/{opportunityId}")
+    public String sendTemplateMail( @PathVariable("templateId") String id1,
+                                    @PathVariable("opportunityId") String id2,
+                                    @RequestBody EmailRequest emailRequest) throws MessagingException {
+        return emailService.sendColdEmail(id1, id2, emailRequest);
     }
 
     @Operation(summary = "Send quotation")

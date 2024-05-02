@@ -8,5 +8,4 @@ import java.util.Optional;
 
 @Repository
 public interface StageRepository extends JpaRepository<Stage, String> {
-    Optional<Stage> findByName(String name);
 }

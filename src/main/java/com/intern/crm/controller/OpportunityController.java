@@ -45,10 +45,8 @@ public class OpportunityController {
     @Operation(summary = "Create an opportunity")
     @PostMapping("")
     public ResponseEntity<?> createOpportunity(
-            @RequestBody CreateOpportunityRequest opportunityModel,
-            @RequestParam(value = "stageId", required = false) String stageId,
-            @RequestParam(value = "isCustomer", required = false, defaultValue = "false") Boolean isCustomer) {
-        opportunityService.createOpportunity(opportunityModel, stageId, isCustomer);
+            @RequestBody CreateOpportunityRequest opportunityModel) {
+        opportunityService.createOpportunity(opportunityModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Create an opportunity successfully."));
     }
 

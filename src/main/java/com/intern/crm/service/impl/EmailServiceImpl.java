@@ -106,10 +106,11 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
+
     @Override
-    public String sendColdEmail(EmailRequest emailRequest) throws MessagingException {
+    public String sendColdEmail(String templateId, String opportunityId, EmailRequest emailRequest) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        Map<String, Object> data = new HashMap<>();
+        Map<String, String> data = new HashMap<>();
         data.put("company", emailRequest.getCompany());
         data.put("salesperson", emailRequest.getSalesperson());
         data.put("description", emailRequest.getDescription());
