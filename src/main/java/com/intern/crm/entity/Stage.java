@@ -19,7 +19,7 @@ public class Stage extends Auditable<String> {
 
     private String name;
     private Double revenue; //total expected revenue group by StageID
-    private int order;
+    //private int order;
     //constructor
     public Stage() {
     }
@@ -54,11 +54,11 @@ public class Stage extends Auditable<String> {
         this.revenue = revenue;
     }
 
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
-    }
+//    public int getOrder() {
+//        return order;
+//    }
+//
+//    public void setOrder(int order) {
+//        this.order = order;
+//    }
 }

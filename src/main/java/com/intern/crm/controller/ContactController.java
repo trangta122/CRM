@@ -24,7 +24,7 @@ public class ContactController {
     @PostMapping("/opportunity/{id}")
     public ResponseEntity<?> addContact(@PathVariable("id") String opportunityId, @RequestBody CreateContactRequest contactRequest) {
         contactService.createContact(opportunityId, contactRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Add contact successfully for opportunity with ID: " + opportunityId));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Add contact successfully."));
     }
 
     @Operation(summary = "Retrieve all contacts")

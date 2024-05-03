@@ -51,27 +51,25 @@ public class OpportunityServiceImpl implements OpportunityService {
     @Override
     public Opportunity createOpportunity(CreateOpportunityRequest opportunityRequest) {
         Opportunity opportunity = modelMapper.map(opportunityRequest, Opportunity.class);
-        String detail;
-        if (opportunityRequest.getStageId() == null) {
-            opportunity.setStage(stageRepository.findById(stageId).get());
-            detail = "Stage changed: None -> " + stageRepository.findById(stageId).get().getName();
-            saveActivity(opportunity.getId(), "Stage", detail);
-        } else {
-            opportunity.setStage(stageRepository.findById(opportunityRequest.getStageId()).get());
-            detail = "Stage changed: None -> " + stageRepository.findById(stageId).get().getName();
-            saveActivity(opportunity.getId(), "Stage", detail);
-        }
 
-        if (opportunityRequest.getRevenue() != 0) {
-            detail = "Expected revenue changed: 0 -> " + opportunityRequest.getRevenue() + " VND";
-            saveActivity(opportunity.getId(), "Expected revenue", detail);
-            Stage stage = opportunity.getStage();
-            stage.setRevenue(stage.getRevenue() + opportunityRequest.getRevenue());
-            stageRepository.save(stage);
+        if (opportunity.getName() == null || opportunity.getName() == "") {
+            opportunity.setName(opportunity.getCompany());
         }
 
         opportunity.setCustomer(opportunityRequest.isCustomer());
         opportunity.setProbability((float) 0);
+
+        if (opportunityRequest.getStageId() == null  || opportunityRequest.getStageId() == "") {
+            opportunity.setStage(stageRepository.findById(stageId).get());
+        } else opportunity.setStage(stageRepository.findById(opportunityRequest.getStageId()).get());
+
+
+        if (opportunityRequest.getRevenue() != 0) {
+            Stage stage = stageRepository.findById(opportunityRequest.getStageId()).get();
+            stage.setRevenue(stage.getRevenue() + opportunityRequest.getRevenue());
+            stageRepository.save(stage);
+        }
+
         return opportunityRepository.save(opportunity);
     }
 
@@ -182,8 +180,7 @@ public class OpportunityServiceImpl implements OpportunityService {
             detail = "Salesperson changed: None -> " + user.getFullname();
             saveActivity(opportunityId, "Salesperson", detail);
         }
-
-        if (!(opportunity.getSalesperson().getId()).equals(user.getId())) {
+        if (opportunity.getSalesperson() != null && !(opportunity.getSalesperson().getId()).equals(user.getId())) {
             detail = "Salesperson changed: " + opportunity.getSalesperson().getFullname() + " -> " + user.getFullname();
             saveActivity(opportunityId, "Salesperson",detail);
         }
