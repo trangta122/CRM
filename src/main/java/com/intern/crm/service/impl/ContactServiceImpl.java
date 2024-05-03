@@ -45,8 +45,6 @@ public class ContactServiceImpl implements ContactService {
 
         for (Contact contact : contacts) {
             ContactModel contactModel = modelMapper.map(contact, ContactModel.class);
-            List<String> opportunities = contact.getOpportunities().stream().map(e -> modelMapper.map(e.getId(), String.class)).collect(Collectors.toList());
-            contactModel.setOpportunityIds(opportunities);
             contactModels.add(contactModel);
         }
         return contactModels;
@@ -57,9 +55,6 @@ public class ContactServiceImpl implements ContactService {
     public ContactModel findContactById(String id) {
         Contact contact = contactRepository.findById(id).get();
         ContactModel contactModel = modelMapper.map(contact, ContactModel.class);
-        List<String> opportunities = contactRepository.findById(id).get().getOpportunities()
-                .stream().map(e -> modelMapper.map(e.getId(), String.class)).collect(Collectors.toList());
-        contactModel.setOpportunityIds(opportunities);
         return contactModel;
     }
 
@@ -70,13 +65,19 @@ public class ContactServiceImpl implements ContactService {
 
         for (Contact contact : contacts) {
             ContactModel contactModel = modelMapper.map(contact, ContactModel.class);
-            List<String> opportunities = contact.getOpportunities().stream()
-                    .map(e -> modelMapper.map(e.getId(), String.class)).collect(Collectors.toList());
-            contactModel.setOpportunityIds(opportunities);
             contactModels.add(contactModel);
         }
 
-        return  contactModels;
+        List<ContactModel> contactModelList = new ArrayList<>();
+
+        if (contactModels.size() > 0 ) {
+            contactModelList.add(contactModels.get(0));
+            if (contactModels.size() >= 2) {
+                contactModelList.add(contactModels.get(1));
+            }
+        }
+
+        return  contactModelList;
     }
 
     //Update contact by ID
@@ -96,7 +97,6 @@ public class ContactServiceImpl implements ContactService {
 
         contactRepository.save(contact);
         ContactModel contactModel1 = modelMapper.map(contact, ContactModel.class);
-        contactModel1.setOpportunityIds(contactModel.getOpportunityIds());
         return contactModel1;
     }
 
@@ -112,9 +112,6 @@ public class ContactServiceImpl implements ContactService {
         List<ContactModel> contactModels = new ArrayList<>();
         for (Contact contact : contacts) {
             ContactModel contactModel = modelMapper.map(contact, ContactModel.class);
-            List<String> opportunities = contact.getOpportunities()
-                    .stream().map(e -> modelMapper.map(e.getId(), String.class)).collect(Collectors.toList());
-            contactModel.setOpportunityIds(opportunities);
             contactModels.add(contactModel);
         }
 

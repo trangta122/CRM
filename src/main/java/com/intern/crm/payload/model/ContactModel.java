@@ -16,7 +16,6 @@ public class ContactModel {
     private Date birthday;
     private String gender;
     private String jobPosition;
-    private List<String> opportunityIds;
 
     public String getId() {
         return id;
@@ -90,11 +89,4 @@ public class ContactModel {
         this.jobPosition = jobPosition;
     }
 
-    public List<String> getOpportunityIds() {
-        return opportunityIds;
-    }
-
-    public void setOpportunityIds(List<String> opportunityIds) {
-        this.opportunityIds = opportunityIds;
-    }
 }
