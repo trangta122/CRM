@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.*;
 public class ContactController {
     @Autowired
     ContactService contactService;
-//comment
-    @Operation(summary = "Add a contact for a specifying opportunity by ID")
+
+    @Operation(summary = "Add a contact for an opportunity by opportunity's ID")
     @PostMapping("/opportunity/{id}")
     public ResponseEntity<?> addContact(@PathVariable("id") String opportunityId, @RequestBody CreateContactRequest contactRequest) {
         contactService.createContact(opportunityId, contactRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Add contact successfully for opportunity with ID: " + opportunityId));
     }
 
-    @Operation(summary = "List all contacts")
+    @Operation(summary = "Retrieve all contacts")
     @GetMapping("/all")
     public ResponseEntity<?> findAllContacts() {
         return ResponseEntity.status(HttpStatus.OK).body(contactService.listAllContacts());
@@ -39,19 +39,19 @@ public class ContactController {
         return ResponseEntity.status(HttpStatus.OK).body(contactService.findContactById(id));
     }
 
-    @Operation(summary = "Retrieve all contacts of an opportunity")
+    @Operation(summary = "Retrieve all contacts of an opportunity by Opportunity's ID")
     @GetMapping("/opportunity/{id}")
     public ResponseEntity<?> getAllContactByOpportunityId(@PathVariable("id") String id) {
         return ResponseEntity.status(HttpStatus.OK).body(contactService.findContactByOpportunityId(id));
     }
 
-    @Operation(summary = "Update contact by ID")
+    @Operation(summary = "Update a contact by ID")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateContact(@PathVariable("id") String id, @RequestBody ContactModel contactModel) {
         return ResponseEntity.status(HttpStatus.OK).body(contactService.editContactById(id, contactModel));
     }
 
-    @Operation(summary = "Pagination")
+    @Operation(summary = "Pagination, Sort")
     @GetMapping("")
     public ResponseEntity<?> getAllContacts(
             @RequestParam(defaultValue = "0") int page,

@@ -22,11 +22,10 @@ public class EmailRequest {
     public EmailRequest() {
     }
 
-    public EmailRequest(String recipient, String subject, String message, String attachment) {
+    public EmailRequest(String recipient, String subject, String message) {
         this.recipient = recipient;
         this.subject = subject;
         this.message = message;
-        this.attachment = attachment;
     }
 
 

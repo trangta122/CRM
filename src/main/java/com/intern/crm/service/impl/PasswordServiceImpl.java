@@ -66,8 +66,7 @@ public class PasswordServiceImpl implements PasswordService {
         EmailRequest emailRequest = new EmailRequest(
                 "ttt-batch15bd@sdc.edu.vn",
                 "Verification email",
-                "Please sign in with the new password below to complete reset password: " + newPassword,
-                ""
+                "Please sign in with the new password below to complete reset password process: " + newPassword
         );
 
         emailService.sendSimpleEmail(emailRequest);

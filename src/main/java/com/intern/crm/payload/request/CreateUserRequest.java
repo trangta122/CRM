@@ -12,7 +12,6 @@ public class CreateUserRequest {
     private Date birthday;
     private String gender;
     private String username;
-    private String password;
     private Set<String> role;
 
     public String getFirstname() {
@@ -77,14 +76,6 @@ public class CreateUserRequest {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Set<String> getRole() {

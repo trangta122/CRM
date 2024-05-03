@@ -23,7 +23,7 @@ public class ActivityController {
     @Autowired
     ActivityService activityService;
 
-    @Operation(summary = "Add an activity for an opportunity")
+    @Operation(summary = "Add an activity for an opportunity by Opportunity's ID")
     @PostMapping("/opportunity/{id}")
     public ResponseEntity<?> addActivity(@PathVariable("id") String id, @RequestBody CreateActivityRequest request){
         activityService.createActivity(id, request);
@@ -36,29 +36,29 @@ public class ActivityController {
         return ResponseEntity.status(HttpStatus.OK).body(activityService.listAllActivities());
     }
 
-    @Operation(summary = "Retrieve an activity by ID")
+    @Operation(summary = "Retrieve an activity by  activity's ID")
     @GetMapping("/{id}")
     public ResponseEntity<?> getActivityById(@PathVariable("id") String id) {
         return ResponseEntity.status(HttpStatus.OK).body(activityService.getActivityById(id));
     }
 
-    @Operation(summary = "Retrieve all activities of an opportunity")
+    @Operation(summary = "Retrieve all activities of an opportunity by Opportunity's ID")
     @GetMapping("/opportunity/{id}")
     public ResponseEntity<?> getAllActivitiesByOpportunityId(@PathVariable("id") String id) {
         return ResponseEntity.status(HttpStatus.OK).body(activityService.getAllActivitiesByOpportunityId(id));
     }
 
-    @Operation(summary = "Pagination")
-    @GetMapping("")
-    public ResponseEntity<?> getAllActivities(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size,
-            @RequestParam(defaultValue = "date") String sortBy
-            ) {
-        return ResponseEntity.status(HttpStatus.OK).body(activityService.getAllActivity(page, size, sortBy));
-    }
+//    @Operation(summary = "Pagination")
+//    @GetMapping("")
+//    public ResponseEntity<?> getAllActivities(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "3") int size,
+//            @RequestParam(defaultValue = "date") String sortBy
+//            ) {
+//        return ResponseEntity.status(HttpStatus.OK).body(activityService.getAllActivity(page, size, sortBy));
+//    }
 
-    @Operation(summary = "Update activity by ID")
+    @Operation(summary = "Update an activity by activity's ID")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateActivity(@PathVariable("id") String id, @RequestBody ActivityModel request) {
         return ResponseEntity.status(HttpStatus.OK).body(activityService.editActivity(id, request));

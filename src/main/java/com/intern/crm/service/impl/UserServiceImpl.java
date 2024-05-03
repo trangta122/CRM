@@ -7,11 +7,14 @@ import com.intern.crm.entity.User;
 import com.intern.crm.payload.model.FileModel;
 import com.intern.crm.payload.model.UserModel;
 import com.intern.crm.payload.request.CreateUserRequest;
+import com.intern.crm.payload.request.EmailRequest;
 import com.intern.crm.payload.response.MessageResponse;
 import com.intern.crm.repository.AvatarRepository;
 import com.intern.crm.repository.RoleRepository;
 import com.intern.crm.repository.UserRepository;
+import com.intern.crm.service.EmailService;
 import com.intern.crm.service.UserService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +41,8 @@ public class UserServiceImpl implements UserService {
     RoleRepository roleRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    EmailService emailService;
 
     @Value("${spring.default.avatar}")
     private String defaultAvatar;
@@ -77,12 +82,23 @@ public class UserServiceImpl implements UserService {
                 }
             });
         }
-
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        //Generate password
+        String password = RandomStringUtils.randomAscii(10);
+        user.setPassword(passwordEncoder.encode(password));
         user.setRoles(roles);
-        Avatar avatar = avatarRepository.findById(defaultAvatar).get();
-        user.setAvatar(avatar);
+        user.setAvatar(avatarRepository.findById(defaultAvatar).get());
+
         userRepository.save(user);
+
+        EmailRequest emailRequest = new EmailRequest(
+                "ttt-batch15bd@sdc.edu.vn",
+                "New account email",
+                "Please sign in with the username and password below to start your work: " + "\n" +
+                        "Username: " + user.getUsername() + "\n" +
+                        "Password: " + password
+        );
+
+        emailService.sendSimpleEmail(emailRequest);
         return "Create user successfully.";
     }
 
@@ -128,7 +144,6 @@ public class UserServiceImpl implements UserService {
         u.setEmail(userModel.getEmail());
         u.setPhone(userModel.getPhone());
         u.setBirthday(userModel.getBirthday());
-        u.setUsername(userModel.getUsername());
         u.setGender(userModel.getGender());
         u.setLastModifiedDate(new Date());
 

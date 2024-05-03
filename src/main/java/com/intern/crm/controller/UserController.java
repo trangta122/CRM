@@ -49,9 +49,10 @@ public class UserController {
     @Operation(summary = "ADMIN: Create a new user")
     @PostMapping("")
     public ResponseEntity<?> createUser(@RequestBody CreateUserRequest userRequest) {
+        ;
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userRequest));
     }
-    @Operation(summary = "ADMIN: Find all users",
+    @Operation(summary = "ADMIN: Retrieve all users",
                 description = "List all users with id, firstname, lastname, fullname, email, phone, birthday, gender, username and role. Only admin can do this.")
     @GetMapping("/all")
     public ResponseEntity<List<UserModel>> getAllUsers() {
@@ -59,20 +60,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userResponseList);
     }
 
-    @Operation(summary = "ADMIN: Retrieve a user by ID",
+    @Operation(summary = "ADMIN: Retrieve a user by User's ID",
             description = "Get information about a user by ID with: id, firstname, lastname, fullname, email, phone, birthday, gender, username and role.")
     @GetMapping("/{id}")
     public ResponseEntity<UserModel> getUserById (@PathVariable("id")String id) {
         return new ResponseEntity<>(userService.findUserById(id), HttpStatus.OK);
     }
 
-    @Operation(summary = "ADMIN: Update information for specifying user by ID.", description = "Update: firstname, lastname, email, phone, birthday, gender and username.")
+    @Operation(summary = "ADMIN: Update a user by User's ID.", description = "Update: firstname, lastname, email, phone, birthday, gender and username.")
     @PutMapping("/{id}")
     public ResponseEntity<UserModel> editUser(@RequestBody UserModel user, @PathVariable("id") String id) {
         return new ResponseEntity<UserModel>(userService.updateUser(user, id), HttpStatus.OK);
     }
 
-    @Operation(summary = "ADMIN: Pagination")
+    @Operation(summary = "ADMIN: Pagination, Sort")
     @GetMapping("")
     public ResponseEntity<?> getAllUsers(
             @RequestParam(defaultValue = "0") int page,

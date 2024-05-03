@@ -92,7 +92,7 @@ public class AvatarServiceImpl implements AvatarService {
         if(isWindows()) {
             return "uploads/avatars/";
         } else {
-            throw new Exception("Cannot set root path because of Unknow OS");
+            throw new Exception("Cannot set root path because of Unknown OS");
         }
     }
 

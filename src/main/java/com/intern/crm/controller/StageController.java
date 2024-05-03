@@ -39,20 +39,20 @@ public class StageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Create a stage successfully."));
     }
 
-    @Operation(summary = "Get all stages")
+    @Operation(summary = "Retrieve all stages")
     @GetMapping("/all")
     public ResponseEntity<List<StageModel>> getAllStages() {
         List<StageModel> stageList = stageService.listAllStages();
         return ResponseEntity.status(HttpStatus.OK).body(stageList);
     }
 
-    @Operation(summary = "Retrieve a stage by ID")
+    @Operation(summary = "Retrieve a stage by Stage's ID")
     @GetMapping("/{id}")
     public ResponseEntity<Optional<StageModel>> getStageById(@PathVariable("id") String id) {
         return new ResponseEntity<>(stageService.getStageById(id), HttpStatus.OK);
     }
 
-    @Operation(summary = "ADMIN: Edit a stage")
+    @Operation(summary = "ADMIN: Update a stage by Stage's ID")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<StageModel> updateStage(@PathVariable("id") String id, @RequestBody StageModel stageModel) {
@@ -60,13 +60,13 @@ public class StageController {
     }
 
 
-    @Operation(summary = "ADMIN: Delete a stage")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable("id") String id) {
-        stageService.deleteStageById(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new MessageResponse("Delete stage successfully."));
-    }
+//    @Operation(summary = "ADMIN: Delete a stage")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<?> deleteById(@PathVariable("id") String id) {
+//        stageService.deleteStageById(id);
+//        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new MessageResponse("Delete stage successfully."));
+//    }
 
     @Operation(summary = "Retrieve all opportunities of a stage by Stage's ID")
     @GetMapping("/{id}/opportunities")

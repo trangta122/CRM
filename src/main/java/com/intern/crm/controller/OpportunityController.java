@@ -60,20 +60,20 @@ public class OpportunityController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Please upload another Excel file!"));
     }
 
-    @Operation(summary = "Find all opportunities")
+    @Operation(summary = "Retrieve all opportunities")
     @GetMapping("/all")
     public ResponseEntity<List<OpportunityModel>> listAllOpportunities() {
         List<OpportunityModel> opportunityModelList = opportunityService.listAllOpportunities();
         return ResponseEntity.status(HttpStatus.OK).body(opportunityModelList);
     }
 
-    @Operation(summary = "Get an opportunity by ID")
+    @Operation(summary = "Retrieve an opportunity by Opportunity's ID")
     @GetMapping("/{id}")
     public ResponseEntity<?> getAnOpportunityById(@PathVariable("id") String id) {
         return ResponseEntity.status(HttpStatus.OK).body(opportunityService.findOpportunityById(id));
     }
 
-    @Operation(summary = "Pagination")
+    @Operation(summary = "Pagination, Sort")
     @GetMapping("")
     public ResponseEntity<?> getAllOpportunities(
             @RequestParam(defaultValue = "0") int page,
@@ -84,7 +84,7 @@ public class OpportunityController {
         return ResponseEntity.status(HttpStatus.OK).body(opportunityService.pagingOpportunity(page, size, sortBy));
     }
 
-    @Operation(summary = "Edit information, convert stage")
+    @Operation(summary = "Update an opportunity - Convert stage - Mark lost by opportunity's ID")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOpportunity(
             @PathVariable("id") String opportunityId,
@@ -103,9 +103,9 @@ public class OpportunityController {
         return ResponseEntity.status(HttpStatus.OK).body(opportunityService.assignSalesperson(id1, id2));
     }
 
-    @Operation(summary = "Retrieve all opportunities of an contact")
-    @GetMapping("/contact/{id}")
-    public ResponseEntity<?> getAllOpportunitiesByContactId(@PathVariable("id") String id) {
-        return ResponseEntity.status(HttpStatus.OK).body(opportunityService.findOpportunityByContactId(id));
-    }
+//    @Operation(summary = "Retrieve all opportunities of an contact")
+//    @GetMapping("/contact/{id}")
+//    public ResponseEntity<?> getAllOpportunitiesByContactId(@PathVariable("id") String id) {
+//        return ResponseEntity.status(HttpStatus.OK).body(opportunityService.findOpportunityByContactId(id));
+//    }
 }
