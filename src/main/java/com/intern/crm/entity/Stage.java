@@ -16,10 +16,10 @@ public class Stage extends Auditable<String> {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
     private String name;
     private Double revenue; //total expected revenue group by StageID
-    //private int order;
+    private int code;
+
     //constructor
     public Stage() {
     }
@@ -54,11 +54,11 @@ public class Stage extends Auditable<String> {
         this.revenue = revenue;
     }
 
-//    public int getOrder() {
-//        return order;
-//    }
-//
-//    public void setOrder(int order) {
-//        this.order = order;
-//    }
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
 }
