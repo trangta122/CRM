@@ -8,6 +8,8 @@ public class CreateOpportunityRequest {
     private String address;
     private String website;
     private Double revenue; //expected revenue
+    private String stageId;
+    private boolean isCustomer;
 
     public String getCompany() {
         return company;
@@ -63,5 +65,21 @@ public class CreateOpportunityRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getStageId() {
+        return stageId;
+    }
+
+    public void setStageId(String stageId) {
+        this.stageId = stageId;
+    }
+
+    public boolean isCustomer() {
+        return isCustomer;
+    }
+
+    public void setCustomer(boolean customer) {
+        isCustomer = customer;
     }
 }

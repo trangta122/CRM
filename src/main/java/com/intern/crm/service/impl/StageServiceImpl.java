@@ -29,8 +29,13 @@ public class StageServiceImpl implements StageService {
     OpportunityServiceImpl opportunityService;
     @Override
     public List<StageModel> listAllStages() {
-        List<Stage> stage = stageRepository.findAll();
-        return stage.stream().map(s -> modelMapper.map(s, StageModel.class)).collect(Collectors.toList());
+        List<Stage> stages = stageRepository.findAll();
+        List<StageModel> stageModels = new ArrayList<>();
+        for (Stage stage : stages) {
+            StageModel stageModel = modelMapper.map(stage, StageModel.class);
+            stageModels.add(stageModel);
+        }
+        return stageModels;
     }
 
     @Override

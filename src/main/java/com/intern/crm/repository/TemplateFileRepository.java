@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TemplateFileRepository extends JpaRepository<TemplateFile, String> {
-    Page<TemplateFile> findAll(Pageable pageable);
 }

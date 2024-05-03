@@ -9,15 +9,9 @@ import java.util.Map;
 
 public interface TemplateFileService {
     //Upload a file
-    String saveFile(MultipartFile file, boolean isFile);
+    FileModel saveTemplate(MultipartFile file);
 
     //Download a file
     Resource downloadFile(String id) throws Exception;
-
-    //Pagination
-    Map<String, Object> pagination(int page, int size, String sortBy);
-
-    //Get a file by File's ID
-    FileModel getFileById(String id);
 
 }

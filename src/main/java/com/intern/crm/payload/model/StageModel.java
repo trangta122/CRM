@@ -4,6 +4,7 @@ public class StageModel {
     private String id;
     private String name;
     private Double revenue;
+    private int order;
 
     //getter & setter
 
@@ -29,5 +30,13 @@ public class StageModel {
 
     public void setRevenue(Double revenue) {
         this.revenue = revenue;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

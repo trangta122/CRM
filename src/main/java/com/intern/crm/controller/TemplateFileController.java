@@ -26,12 +26,10 @@ public class TemplateFileController {
     @Autowired
     TemplateFileService fileService;
 
-    @Operation(summary = "Upload a file")
+    @Operation(summary = "Upload a template")
     @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> uploadFile(@RequestPart MultipartFile file,
-                                        @RequestParam(value = "isFile", defaultValue = "false") boolean isFile) throws JsonMappingException, JsonProcessingException {
-
-        return ResponseEntity.status(HttpStatus.OK).body(fileService.saveFile(file, isFile));
+    public ResponseEntity<?> uploadFile(@RequestPart MultipartFile file) throws JsonMappingException, JsonProcessingException {
+        return ResponseEntity.status(HttpStatus.OK).body(fileService.saveTemplate(file));
     }
 
     @Operation(summary = "Download a file by File's ID")
@@ -47,18 +45,4 @@ public class TemplateFileController {
                 .body(file);
     }
 
-    @Operation(summary = "Pagination")
-    @GetMapping("")
-    public ResponseEntity<?> pagingFile(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "3") int size,
-            @RequestParam(defaultValue = "name") String sortBy) {
-        return ResponseEntity.status(HttpStatus.OK).body(fileService.pagination(page, size, sortBy));
-    }
-
-    @Operation(summary = "Get a file by File's ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getFileById(@PathVariable("id") String id) {
-        return ResponseEntity.status(HttpStatus.OK).body(fileService.getFileById(id));
-    }
 }

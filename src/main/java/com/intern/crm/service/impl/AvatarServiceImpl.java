@@ -56,7 +56,6 @@ public class AvatarServiceImpl implements AvatarService {
 
         user.setAvatar(avatar);
 
-
         if (!prevAvatar.equals(defaultAvatar)) {
             Path path1 = Paths.get(prevPath);
             Files.delete(path1); //delete raw file on server

@@ -5,7 +5,6 @@ public class FileModel {
     private String name;
     private String type;
     private String physicalPath;
-    private boolean is_template;
 
     public String getId() {
         return id;
@@ -37,13 +36,5 @@ public class FileModel {
 
     public void setPhysicalPath(String physicalPath) {
         this.physicalPath = physicalPath;
-    }
-
-    public boolean isIs_template() {
-        return is_template;
-    }
-
-    public void setIs_template(boolean is_template) {
-        this.is_template = is_template;
     }
 }

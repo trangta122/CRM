@@ -46,11 +46,11 @@ public class OpportunityServiceImpl implements OpportunityService {
     private String lostId;
     DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
     @Override
-    public Opportunity createOpportunity(CreateOpportunityRequest opportunityModel, String stageId, Boolean isCustomer) {
-        Stage stage = stageRepository.findById(stageId).get();
+    public Opportunity createOpportunity(CreateOpportunityRequest opportunityModel) {
+        Stage stage = stageRepository.findById(opportunityModel.getStageId()).get();
         Opportunity opportunity = modelMapper.map(opportunityModel, Opportunity.class);
         opportunity.setStage(stage);
-        opportunity.setCustomer(isCustomer);
+        opportunity.setCustomer(opportunityModel.isCustomer());
         opportunity.setProbability((float) 0);
         return opportunityRepository.save(opportunity);
     }
@@ -113,7 +113,7 @@ public class OpportunityServiceImpl implements OpportunityService {
 
         //Log expected revenue changed
         if (!opportunity.getRevenue().equals(opportunityModel.getRevenue()) ) {
-            detail = "Expected revenue changed " + new DecimalFormat("0").format(opportunity.getRevenue()) + " VND"  + " -> " + new DecimalFormat("0").format(opportunityModel.getRevenue()) + " VND";
+            detail = "Expected revenue changed: " + new DecimalFormat("0").format(opportunity.getRevenue()) + " VND"  + " -> " + new DecimalFormat("0").format(opportunityModel.getRevenue()) + " VND";
             saveActivity(opportunityId, detail);
         }
 

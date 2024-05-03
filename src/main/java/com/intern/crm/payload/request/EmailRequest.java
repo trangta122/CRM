@@ -8,19 +8,16 @@ public class EmailRequest {
     private String message;
     private String attachment;
 
-    //Cold email request
-    private String company; //customer in quotation
-    private String salesperson;
-    private String description;
-
     //Quotation request
     private Date expiration;
     private String product;
     private Double price;
     private int tax;
+    private String condition;
+
     private Double vat;
     private Double total;
-    private String condition;
+
 
     public EmailRequest() {
     }
@@ -63,30 +60,6 @@ public class EmailRequest {
 
     public void setAttachment(String attachment) {
         this.attachment = attachment;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    public String getSalesperson() {
-        return salesperson;
-    }
-
-    public void setSalesperson(String salesperson) {
-        this.salesperson = salesperson;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Date getExpiration() {

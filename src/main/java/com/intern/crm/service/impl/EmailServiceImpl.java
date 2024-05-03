@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -73,7 +74,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public String sendEmailWithAttachment(EmailRequest emailRequest) {
+    public String sendEmailWithAttachment(EmailRequest emailRequest) throws IOException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper;
 
@@ -86,7 +87,7 @@ public class EmailServiceImpl implements EmailService {
             mimeMessageHelper.setText(emailRequest.getMessage());
 
             TemplateFile attachment = fileRepository.findById(emailRequest.getAttachment()).get();
-            String path = "uploads/" + attachment.getPhysicalPath();
+            String path = attachment.getPhysicalPath();
 
             FileSystemResource file = new FileSystemResource(new File(path));
             mimeMessageHelper.addAttachment(file.getFilename(), file);
@@ -98,21 +99,32 @@ public class EmailServiceImpl implements EmailService {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+        finally {
+            Path path = Paths.get(fileRepository.findById(emailRequest.getAttachment()).get().getPhysicalPath());
+            Files.delete(path);
+            fileRepository.deleteById(emailRequest.getAttachment());
+        }
     }
 
+
     @Override
-    public String sendColdEmail(EmailRequest emailRequest, Map<String, Object> model) throws MessagingException {
+    public String sendColdEmail(String templateId, String opportunityId, EmailRequest emailRequest) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        Opportunity opportunity = opportunityRepository.findById(opportunityId).get();
+        Map<String, String> data = new HashMap<>();
+        data.put("company", opportunity.getCompany());
+        data.put("salesperson", opportunity.getSalesperson().getFullname());
+        data.put("description", opportunity.getDescription());
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
                     StandardCharsets.UTF_8.name());
 
             Template template = configFreemarker.getTemplate("cold-email.html");
-            String content = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+            String content = FreeMarkerTemplateUtils.processTemplateIntoString(template, data);
 
             helper.setTo(sender);
             helper.setTo(emailRequest.getRecipient());
-            helper.setSubject(emailRequest.getSubject());
+            helper.setSubject("Making the first contact from Blossom");
             helper.setText(content, true);
 
             String logoPath = "./static/logo.png";
@@ -142,7 +154,7 @@ public class EmailServiceImpl implements EmailService {
         DateFormat dateFormatter = new SimpleDateFormat("yyyyMMddHHmmssSSS_");
         String currentDateTime = dateFormatter.format(new Date());
 
-        String inputFile = "uploads/quotation-copy.docx";
+        String inputFile = "uploads/20240502153332241_quotation.docx";
         String outputFile = currentDateTime + "quotation.pdf";
         String outputFilePath = "uploads/" + outputFile;
 
@@ -169,7 +181,7 @@ public class EmailServiceImpl implements EmailService {
                 opportunity.getEmail(),
                 opportunity.getAddress(),
                 emailRequest.getProduct(),
-                emailRequest.getDescription(),
+                opportunity.getDescription(),
                 numberFormat(emailRequest.getPrice()),
                 numberFormat(emailRequest.getTax()),
                 numberFormat(emailRequest.getPrice()),
@@ -186,7 +198,7 @@ public class EmailServiceImpl implements EmailService {
         document.saveToFile(outputFilePath, FileFormat.PDF);
 
         //save output docx file information on database
-        TemplateFile file = new TemplateFile(outputFile, "PDF", outputFilePath, true);
+        TemplateFile file = new TemplateFile(outputFile, "PDF", outputFilePath, false);
         file.setOpportunity(opportunity);
         fileRepository.save(file);
 
