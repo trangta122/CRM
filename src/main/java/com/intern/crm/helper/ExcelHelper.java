@@ -1,11 +1,14 @@
 package com.intern.crm.helper;
 
 import com.intern.crm.entity.Opportunity;
+import com.intern.crm.repository.StageRepository;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -16,7 +19,7 @@ import java.util.List;
 
 public class ExcelHelper {
     public static String TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-    static String[] HEADERs = {"company", "email", "phone", "address", "website", "revenue", "isCustomer"};
+    static String[] HEADERs = {"company", "email", "phone", "address", "website"};
     static String SHEET = "opportunity";
 
     //checks whether the file format is Excel or not.
@@ -48,7 +51,6 @@ public class ExcelHelper {
                 int cellIndex = 0;
                 while (cellsInRow.hasNext()) {
                     Cell currentCell = cellsInRow.next();
-
                     switch (cellIndex) {
                         case 0:
                             opportunity.setCompany(currentCell.getStringCellValue());
@@ -66,17 +68,13 @@ public class ExcelHelper {
                         case 4:
                             opportunity.setWebsite(currentCell.getStringCellValue());
                             break;
-                        case 5:
-                            opportunity.setRevenue(currentCell.getNumericCellValue());
-                            break;
-                        case 6:
-                            opportunity.setCustomer(currentCell.getBooleanCellValue());
-                            break;
                         default:
                             break;
                     }
                     cellIndex++;
-                } opportList.add(opportunity);
+                }
+
+                opportList.add(opportunity);
             }
             workbook.close();
             return opportList;

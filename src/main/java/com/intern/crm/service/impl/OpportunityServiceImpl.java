@@ -44,13 +44,33 @@ public class OpportunityServiceImpl implements OpportunityService {
     ModelMapper modelMapper;
     @Value("${crm.app.lost}")
     private String lostId;
+    @Value(("${crm.app.stage}"))
+    private String stageId;
     DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
+
     @Override
-    public Opportunity createOpportunity(CreateOpportunityRequest opportunityModel) {
-        Stage stage = stageRepository.findById(opportunityModel.getStageId()).get();
-        Opportunity opportunity = modelMapper.map(opportunityModel, Opportunity.class);
-        opportunity.setStage(stage);
-        opportunity.setCustomer(opportunityModel.isCustomer());
+    public Opportunity createOpportunity(CreateOpportunityRequest opportunityRequest) {
+        Opportunity opportunity = modelMapper.map(opportunityRequest, Opportunity.class);
+        String detail;
+        if (opportunityRequest.getStageId() == null) {
+            opportunity.setStage(stageRepository.findById(stageId).get());
+            detail = "Stage changed: None -> " + stageRepository.findById(stageId).get().getName();
+            saveActivity(opportunity.getId(), "Stage", detail);
+        } else {
+            opportunity.setStage(stageRepository.findById(opportunityRequest.getStageId()).get());
+            detail = "Stage changed: None -> " + stageRepository.findById(stageId).get().getName();
+            saveActivity(opportunity.getId(), "Stage", detail);
+        }
+
+        if (opportunityRequest.getRevenue() != 0) {
+            detail = "Expected revenue changed: 0 -> " + opportunityRequest.getRevenue() + " VND";
+            saveActivity(opportunity.getId(), "Expected revenue", detail);
+            Stage stage = opportunity.getStage();
+            stage.setRevenue(stage.getRevenue() + opportunityRequest.getRevenue());
+            stageRepository.save(stage);
+        }
+
+        opportunity.setCustomer(opportunityRequest.isCustomer());
         opportunity.setProbability((float) 0);
         return opportunityRepository.save(opportunity);
     }
@@ -58,9 +78,15 @@ public class OpportunityServiceImpl implements OpportunityService {
     @Override
     public void importExcel(MultipartFile file) {
         try {
-            List<Opportunity> opportunityList = ExcelHelper.excelToOpportunities(file.getInputStream());
+            List<Opportunity> opportunities = ExcelHelper.excelToOpportunities(file.getInputStream());
 
-            opportunityRepository.saveAll(opportunityList);
+            for (Opportunity opportunity : opportunities) {
+                opportunity.setStage(stageRepository.findById(stageId).get());
+                opportunity.setRevenue((double) 0);
+                opportunity.setProbability((float) 0);
+                opportunity.setCustomer(false);
+                opportunityRepository.save(opportunity);
+            }
 
         } catch (IOException e) {
             throw new RuntimeException("Import Excel data is failed to store: " + e.getMessage());
@@ -96,11 +122,9 @@ public class OpportunityServiceImpl implements OpportunityService {
                 Stage nextStage = stageRepository.findById(stageId).get();
 
                 detail = "Stage changed: " + prevStage.getName() + " -> " + nextStage.getName();
-                saveActivity(opportunityId, detail);
-
+                saveActivity(opportunityId, "Stage", detail);
 
                 //if opportunity change stage, remove its revenue, move it to next stage
-
                 prevStage.setRevenue(prevStage.getRevenue() - opportunity.getRevenue());
                 stageRepository.save(prevStage);
 
@@ -114,13 +138,13 @@ public class OpportunityServiceImpl implements OpportunityService {
         //Log expected revenue changed
         if (!opportunity.getRevenue().equals(opportunityModel.getRevenue()) ) {
             detail = "Expected revenue changed: " + new DecimalFormat("0").format(opportunity.getRevenue()) + " VND"  + " -> " + new DecimalFormat("0").format(opportunityModel.getRevenue()) + " VND";
-            saveActivity(opportunityId, detail);
+            saveActivity(opportunityId, "Expected revenue", detail);
         }
 
         //Log probability changed
         if (!opportunity.getProbability().equals(opportunityModel.getProbability())) {
             detail = "Probability changed: " + opportunity.getProbability() + " %" + " -> " + opportunityModel.getProbability() + " %";
-            saveActivity(opportunityId, detail);
+            saveActivity(opportunityId, "Probability", detail);
         }
 
         //Update stage's revenue
@@ -156,12 +180,12 @@ public class OpportunityServiceImpl implements OpportunityService {
         //Log salesperson changed
         if (opportunity.getSalesperson() == null) {
             detail = "Salesperson changed: None -> " + user.getFullname();
-            saveActivity(opportunityId, detail);
+            saveActivity(opportunityId, "Salesperson", detail);
         }
 
         if (!(opportunity.getSalesperson().getId()).equals(user.getId())) {
             detail = "Salesperson changed: " + opportunity.getSalesperson().getFullname() + " -> " + user.getFullname();
-            saveActivity(opportunityId, detail);
+            saveActivity(opportunityId, "Salesperson",detail);
         }
 
         opportunity.setSalesperson(user);
@@ -221,8 +245,8 @@ public class OpportunityServiceImpl implements OpportunityService {
         return opportunityModel;
     }
 
-    public void saveActivity(String opporrtunityId ,String detail) {
-        Activity activity = new Activity("Auto-log", detail, new Date(), false);
+    public void saveActivity(String opporrtunityId, String type ,String detail) {
+        Activity activity = new Activity(type, detail, new Date(), false);
         activity.setOpportunity(opportunityRepository.findById(opporrtunityId).get());
         activityRepository.save(activity);
     }
