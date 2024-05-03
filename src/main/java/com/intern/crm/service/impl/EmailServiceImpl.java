@@ -110,10 +110,11 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public String sendColdEmail(String templateId, String opportunityId, EmailRequest emailRequest) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        Opportunity opportunity = opportunityRepository.findById(opportunityId).get();
         Map<String, String> data = new HashMap<>();
-        data.put("company", emailRequest.getCompany());
-        data.put("salesperson", emailRequest.getSalesperson());
-        data.put("description", emailRequest.getDescription());
+        data.put("company", opportunity.getCompany());
+        data.put("salesperson", opportunity.getSalesperson().getFullname());
+        data.put("description", opportunity.getDescription());
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
                     StandardCharsets.UTF_8.name());
@@ -123,7 +124,7 @@ public class EmailServiceImpl implements EmailService {
 
             helper.setTo(sender);
             helper.setTo(emailRequest.getRecipient());
-            helper.setSubject(emailRequest.getSubject());
+            helper.setSubject("Making the first contact from Blossom");
             helper.setText(content, true);
 
             String logoPath = "./static/logo.png";
@@ -180,7 +181,7 @@ public class EmailServiceImpl implements EmailService {
                 opportunity.getEmail(),
                 opportunity.getAddress(),
                 emailRequest.getProduct(),
-                emailRequest.getDescription(),
+                opportunity.getDescription(),
                 numberFormat(emailRequest.getPrice()),
                 numberFormat(emailRequest.getTax()),
                 numberFormat(emailRequest.getPrice()),
