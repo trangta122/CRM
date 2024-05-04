@@ -1,8 +1,10 @@
 package com.intern.crm.controller;
 
+import com.intern.crm.entity.Activity;
 import com.intern.crm.payload.model.ActivityModel;
 import com.intern.crm.payload.request.CreateActivityRequest;
 import com.intern.crm.payload.response.MessageResponse;
+import com.intern.crm.repository.ActivityRepository;
 import com.intern.crm.service.ActivityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -14,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
+
 @CrossOrigin(origins = "*")
 @Tag(name = "Activity", description = "Activity Management APIs")
 @SecurityRequirement(name = "Authorization")
@@ -22,6 +26,21 @@ import java.util.Date;
 public class ActivityController {
     @Autowired
     ActivityService activityService;
+    @Autowired
+    ActivityRepository activityRepository;
+
+    @GetMapping("/schedule/{id}")
+    public ResponseEntity<?> getSchedule(@PathVariable("id") String id) {
+        List<Activity> activities = activityRepository.findScheduleActivityByOpportunityId(id);
+
+        return ResponseEntity.ok().body(activities);
+    }
+
+    @GetMapping("/auto/{id}")
+    public ResponseEntity<?> getAuto(@PathVariable("id") String id) {
+        List<Activity> activities = activityRepository.findAutoActivityByOpportunityId(id);
+        return ResponseEntity.ok().body(activities);
+    }
 
     @Operation(summary = "Add an activity for an opportunity")
     @PostMapping("/opportunity/{id}")
