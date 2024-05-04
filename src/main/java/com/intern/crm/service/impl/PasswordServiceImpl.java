@@ -54,7 +54,7 @@ public class PasswordServiceImpl implements PasswordService {
         }
 
         //Generate password
-        String newPassword = RandomStringUtils.randomAscii(10);
+        String newPassword = RandomStringUtils.randomAlphanumeric(10);
 
         //Update user's password
         User user = userRepository.findByEmail(forgotPasswordRequest.getEmail());

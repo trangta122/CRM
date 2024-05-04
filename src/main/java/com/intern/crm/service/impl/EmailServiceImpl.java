@@ -108,7 +108,7 @@ public class EmailServiceImpl implements EmailService {
 
 
     @Override
-    public String sendColdEmail(String templateId, String opportunityId, EmailRequest emailRequest) throws MessagingException {
+    public String sendColdEmail( String opportunityId, EmailRequest emailRequest) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         Opportunity opportunity = opportunityRepository.findById(opportunityId).get();
         Map<String, String> data = new HashMap<>();
