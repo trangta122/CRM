@@ -69,9 +69,9 @@ public class ActivityServiceImpl implements ActivityService {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), activities.size());
 
-        List<ActivityModel> pageContent = activities.subList(start, end);
+        List<ActivityModel> activityPage = activities.subList(start, end);
 
-        return new PageImpl<>(pageContent, pageable, activities.size());
+        return new PageImpl<>(activityPage, pageable, activities.size());
     }
 
     @Override

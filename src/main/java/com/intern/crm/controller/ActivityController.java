@@ -18,7 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @Tag(name = "Activity", description = "Activity Management APIs")
@@ -33,17 +35,25 @@ public class ActivityController {
 
     @Operation(summary = "Retrieve all planned activities of an opportunity by Opportunity's ID")
     @GetMapping("/schedule/{id}")
-    public ResponseEntity<Page<ActivityModel>> getSchedule(@PathVariable("id") String id,
+    public ResponseEntity<?> getSchedule(@PathVariable("id") String id,
                                                            @RequestParam(defaultValue = "0") int page,
                                                            @RequestParam(defaultValue = "5") int size) {
         Page<ActivityModel> activityPage = activityService.getScheduleActivityByOpportunityId(id, page, size);
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Page-Number", String.valueOf(activityPage.getNumber()));
         headers.add("X-Page-Size", String.valueOf(activityPage.getSize()));
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("activities", activityPage.getContent());
+        data.put("currentPages", activityPage.getNumber());
+        data.put("totalPages", activityPage.getTotalPages());
+        data.put("totalItems", activityPage.getTotalElements());
+
         return ResponseEntity.ok()
                 .headers(headers)
-                .body(activityPage);
+                .body(data);
     }
+
     @Operation(summary = "Retrieve all done planned activities and auto-log activity of an opportunity by Opportunity's ID")
     @GetMapping("/auto/{id}")
     public ResponseEntity<?> getAuto(@PathVariable("id") String id,
@@ -54,9 +64,16 @@ public class ActivityController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Page-Number", String.valueOf(activityPage.getNumber()));
         headers.add("X-Page-Size", String.valueOf(activityPage.getSize()));
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("activities", activityPage.getContent());
+        data.put("currentPages", activityPage.getNumber());
+        data.put("totalPages", activityPage.getTotalPages());
+        data.put("totalItems", activityPage.getTotalElements());
+
         return ResponseEntity.ok()
                 .headers(headers)
-                .body(activityPage);
+                .body(data);
     }
 
     @Operation(summary = "Add an activity for an opportunity by Opportunity's ID")
