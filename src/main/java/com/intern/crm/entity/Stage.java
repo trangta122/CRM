@@ -19,7 +19,6 @@ public class Stage extends Auditable<String> {
     private String name;
     private Double revenue; //total expected revenue group by StageID
     private int code;
-
     //constructor
     public Stage() {
     }

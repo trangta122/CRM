@@ -9,10 +9,7 @@ import com.intern.crm.repository.OpportunityRepository;
 import com.intern.crm.service.ActivityService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -28,6 +25,10 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     ModelMapper modelMapper;
     DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
+
+    private Pageable createPageRequest(int page, int size) {
+        return PageRequest.of(page, size);
+    }
     @Override
     public void createActivity(String id, CreateActivityRequest request) {
         Opportunity opportunity = opportunityRepository.findById(id).get();
@@ -58,6 +59,31 @@ public class ActivityServiceImpl implements ActivityService {
         List<Activity> activities = activityRepository.findActivityByOpportunityId(id);
 
         return listActivities(activities);
+    }
+
+    @Override
+    public Page<ActivityModel> getScheduleActivityByOpportunityId(String id, int page, int size) {
+        Pageable pageable = createPageRequest(page, size);
+
+        List<ActivityModel> activities = listActivities(activityRepository.findScheduleActivityByOpportunityId(id));
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), activities.size());
+
+        List<ActivityModel> pageContent = activities.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, activities.size());
+    }
+
+    @Override
+    public Page<ActivityModel> getAutoActivityByOpportunityId(String id, int page, int size) {
+        Pageable pageable = createPageRequest(page, size);
+        List<ActivityModel> activityModels = listActivities(activityRepository.findAutoActivityByOpportunityId(id));
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), activityModels.size());
+
+        List<ActivityModel> pageContent = activityModels.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, activityModels.size());
     }
 
     @Override

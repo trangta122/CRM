@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "activities")
+@Table(name = "activity")
 @EntityListeners(EntityListeners.class)
 public class Activity extends Auditable<String> {
     @Id

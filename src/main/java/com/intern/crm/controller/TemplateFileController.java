@@ -26,7 +26,7 @@ public class TemplateFileController {
     @Autowired
     TemplateFileService fileService;
 
-    @Operation(summary = "Upload a template")
+    @Operation(summary = "Upload a file")
     @PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> uploadFile(@RequestPart MultipartFile file) throws JsonMappingException, JsonProcessingException {
         return ResponseEntity.status(HttpStatus.OK).body(fileService.saveTemplate(file));

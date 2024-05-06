@@ -120,7 +120,7 @@ public class OpportunityServiceImpl implements OpportunityService {
                 Stage nextStage = stageRepository.findById(stageId).get();
 
                 detail = "Stage changed: " + prevStage.getName() + " -> " + nextStage.getName();
-                saveActivity(opportunityId, "Stage", detail);
+                saveActivity(opportunityId, "Auto", detail);
 
                 //if opportunity change stage, remove its revenue, move it to next stage
                 prevStage.setRevenue(prevStage.getRevenue() - opportunity.getRevenue());
@@ -136,13 +136,13 @@ public class OpportunityServiceImpl implements OpportunityService {
         //Log expected revenue changed
         if (!opportunity.getRevenue().equals(opportunityModel.getRevenue()) ) {
             detail = "Expected revenue changed: " + new DecimalFormat("0").format(opportunity.getRevenue()) + " VND"  + " -> " + new DecimalFormat("0").format(opportunityModel.getRevenue()) + " VND";
-            saveActivity(opportunityId, "Expected revenue", detail);
+            saveActivity(opportunityId, "Auto", detail);
         }
 
         //Log probability changed
         if (!opportunity.getProbability().equals(opportunityModel.getProbability())) {
             detail = "Probability changed: " + opportunity.getProbability() + " %" + " -> " + opportunityModel.getProbability() + " %";
-            saveActivity(opportunityId, "Probability", detail);
+            saveActivity(opportunityId, "Auto", detail);
         }
 
         //Update stage's revenue
@@ -178,11 +178,11 @@ public class OpportunityServiceImpl implements OpportunityService {
         //Log salesperson changed
         if (opportunity.getSalesperson() == null) {
             detail = "Salesperson changed: None -> " + user.getFullname();
-            saveActivity(opportunityId, "Salesperson", detail);
+            saveActivity(opportunityId, "Auto", detail);
         }
         if (opportunity.getSalesperson() != null && !(opportunity.getSalesperson().getId()).equals(user.getId())) {
             detail = "Salesperson changed: " + opportunity.getSalesperson().getFullname() + " -> " + user.getFullname();
-            saveActivity(opportunityId, "Salesperson",detail);
+            saveActivity(opportunityId, "Auto",detail);
         }
 
         opportunity.setSalesperson(user);
