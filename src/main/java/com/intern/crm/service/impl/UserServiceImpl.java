@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
             });
         }
         //Generate password
-        String password = RandomStringUtils.randomAscii(10);
+        String password = RandomStringUtils.randomAlphanumeric(10);
         user.setPassword(passwordEncoder.encode(password));
         user.setRoles(roles);
         user.setAvatar(avatarRepository.findById(defaultAvatar).get());

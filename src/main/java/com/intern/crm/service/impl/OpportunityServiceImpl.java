@@ -52,10 +52,7 @@ public class OpportunityServiceImpl implements OpportunityService {
     public Opportunity createOpportunity(CreateOpportunityRequest opportunityRequest) {
         Opportunity opportunity = modelMapper.map(opportunityRequest, Opportunity.class);
 
-        if (opportunity.getName() == null || opportunity.getName() == "") {
-            opportunity.setName(opportunity.getCompany());
-        }
-
+        opportunity.setName(opportunity.getCompany());
         opportunity.setCustomer(opportunityRequest.isCustomer());
         opportunity.setProbability((float) 0);
 

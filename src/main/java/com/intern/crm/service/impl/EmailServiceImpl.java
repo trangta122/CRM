@@ -4,6 +4,7 @@ import com.intern.crm.entity.Activity;
 import com.intern.crm.entity.Opportunity;
 import com.intern.crm.entity.TemplateFile;
 import com.intern.crm.payload.request.EmailRequest;
+import com.intern.crm.repository.ActivityRepository;
 import com.intern.crm.repository.OpportunityRepository;
 import com.intern.crm.repository.TemplateFileRepository;
 import com.intern.crm.service.EmailService;
@@ -25,6 +26,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,6 +54,8 @@ public class EmailServiceImpl implements EmailService {
     TemplateFileRepository fileRepository;
     @Autowired
     OpportunityRepository opportunityRepository;
+    @Autowired
+    ActivityRepository activityRepository;
     @Autowired
     private Configuration configFreemarker;
     @Value("${spring.mail.username}") private String sender;
@@ -221,10 +225,6 @@ public class EmailServiceImpl implements EmailService {
             FileSystemResource resource = new FileSystemResource(new File(outputFilePath));
             helper.addAttachment(resource.getFilename(), resource);
             javaMailSender.send(mimeMessage);
-
-            //Log send quotation activity
-            String detail = "Quotation sent: " + file.getName();
-            Activity activity = new Activity("Auto-log", detail, new Date(), false);
 
             return "Quotaion email is being sent...";
         } catch (MessagingException e) {
