@@ -42,10 +42,14 @@ public class OpportunityServiceImpl implements OpportunityService {
     ActivityRepository activityRepository;
     @Autowired
     ModelMapper modelMapper;
+    @Autowired
+    PasswordServiceImpl passwordService;
+
     @Value("${crm.app.lost}")
     private String lostId;
     @Value(("${crm.app.stage}"))
     private String stageId;
+
     DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
     @Override
@@ -242,6 +246,7 @@ public class OpportunityServiceImpl implements OpportunityService {
 
     public void saveActivity(String opporrtunityId, String type ,String detail) {
         Activity activity = new Activity(type, detail, new Date(), false);
+        activity.setFullname(userRepository.findById(passwordService.getCurrentUserId()).get().getFullname());
         activity.setOpportunity(opportunityRepository.findById(opporrtunityId).get());
         activityRepository.save(activity);
     }

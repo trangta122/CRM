@@ -9,6 +9,7 @@ public class ActivityModel {
     private String detail;
     private Date date;
     private boolean isDone;
+    private String fullname;
 
     public String getId() {
         return id;
@@ -56,5 +57,13 @@ public class ActivityModel {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 }

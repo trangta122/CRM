@@ -19,6 +19,7 @@ public class Activity extends Auditable<String> {
     private String detail;
     private Date date;
     private Boolean isDone = false;
+    private String fullname;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "opportunity_id")
@@ -81,6 +82,14 @@ public class Activity extends Auditable<String> {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public Opportunity getOpportunity() {

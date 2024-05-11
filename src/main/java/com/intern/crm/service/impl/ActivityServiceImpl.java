@@ -2,10 +2,12 @@ package com.intern.crm.service.impl;
 
 import com.intern.crm.entity.Activity;
 import com.intern.crm.entity.Opportunity;
+import com.intern.crm.entity.User;
 import com.intern.crm.payload.model.ActivityModel;
 import com.intern.crm.payload.request.CreateActivityRequest;
 import com.intern.crm.repository.ActivityRepository;
 import com.intern.crm.repository.OpportunityRepository;
+import com.intern.crm.repository.UserRepository;
 import com.intern.crm.service.ActivityService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,12 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     ActivityRepository activityRepository;
     @Autowired
+    UserRepository userRepository;
+    @Autowired
+    PasswordServiceImpl passwordService;
+    @Autowired
     ModelMapper modelMapper;
+
     DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
     private Pageable createPageRequest(int page, int size) {
@@ -32,10 +39,13 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void createActivity(String id, CreateActivityRequest request) {
         Opportunity opportunity = opportunityRepository.findById(id).get();
+
         Activity activity = modelMapper.map(request, Activity.class);
 
         String detail = "Planned activites | " + request.getType() + ": " + request.getSummary() + " on " + dateFormat.format(request.getDate());
         activity.setDetail(detail);
+        activity.setFullname(userRepository.findById(passwordService.getCurrentUserId()).get().getFullname());
+
         activity.setOpportunity(opportunity);
         activityRepository.save(activity);
     }
