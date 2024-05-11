@@ -2,7 +2,6 @@ package com.intern.crm.service.impl;
 
 import com.intern.crm.entity.Activity;
 import com.intern.crm.entity.Opportunity;
-import com.intern.crm.entity.User;
 import com.intern.crm.payload.model.ActivityModel;
 import com.intern.crm.payload.request.CreateActivityRequest;
 import com.intern.crm.repository.ActivityRepository;
@@ -39,13 +38,11 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public void createActivity(String id, CreateActivityRequest request) {
         Opportunity opportunity = opportunityRepository.findById(id).get();
-
         Activity activity = modelMapper.map(request, Activity.class);
 
         String detail = "Planned activites | " + request.getType() + ": " + request.getSummary() + " on " + dateFormat.format(request.getDate());
         activity.setDetail(detail);
         activity.setFullname(userRepository.findById(passwordService.getCurrentUserId()).get().getFullname());
-
         activity.setOpportunity(opportunity);
         activityRepository.save(activity);
     }

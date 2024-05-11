@@ -10,7 +10,6 @@ public class ActivityModel {
     private Date date;
     private boolean isDone;
     private String fullname;
-
     public String getId() {
         return id;
     }
@@ -58,7 +57,6 @@ public class ActivityModel {
     public void setSummary(String summary) {
         this.summary = summary;
     }
-
     public String getFullname() {
         return fullname;
     }

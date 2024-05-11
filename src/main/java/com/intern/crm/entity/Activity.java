@@ -21,6 +21,7 @@ public class Activity extends Auditable<String> {
     private Boolean isDone = false;
     private String fullname;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "opportunity_id")
     @JsonIgnore
@@ -83,7 +84,7 @@ public class Activity extends Auditable<String> {
     public void setSummary(String summary) {
         this.summary = summary;
     }
-
+    
     public String getFullname() {
         return fullname;
     }
@@ -91,7 +92,7 @@ public class Activity extends Auditable<String> {
     public void setFullname(String fullname) {
         this.fullname = fullname;
     }
-
+    
     public Opportunity getOpportunity() {
         return opportunity;
     }
