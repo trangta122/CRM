@@ -4,6 +4,7 @@ import com.intern.crm.entity.Contact;
 import com.intern.crm.payload.model.ContactModel;
 import com.intern.crm.payload.model.OpportunityModel;
 import com.intern.crm.payload.request.CreateContactRequest;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ public interface ContactService {
     ContactModel findContactById(String id);
 
     //Retrieve all contacts of an opportunity
-    List<ContactModel> findContactByOpportunityId(String id);
+    Page<ContactModel> findContactByOpportunityId(String id, int page, int size);
 
     //Update a contact
     ContactModel editContactById(String id, ContactModel contactModel);

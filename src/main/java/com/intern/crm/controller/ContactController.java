@@ -8,9 +8,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
 @CrossOrigin(origins = "*")
 @Tag(name = "Contact", description = "Contact Management APIs")
 @SecurityRequirement(name = "Authorization")
@@ -41,8 +47,24 @@ public class ContactController {
 
     @Operation(summary = "Retrieve all contacts of an opportunity by Opportunity's ID")
     @GetMapping("/opportunity/{id}")
-    public ResponseEntity<?> getAllContactByOpportunityId(@PathVariable("id") String id) {
-        return ResponseEntity.status(HttpStatus.OK).body(contactService.findContactByOpportunityId(id));
+    public ResponseEntity<?> getAllContactByOpportunityId(@PathVariable("id") String id,
+                                                          @RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "5") int size) {
+
+        Page<ContactModel> contactPage = contactService.findContactByOpportunityId(id, page, size);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Page-Number", String.valueOf(contactPage.getNumber()));
+        headers.add("X-Page-Sixe", String.valueOf(contactPage.getSize()));
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("contacts", contactPage.getContent());
+        data.put("currentPage", contactPage.getNumber());
+        data.put("totalPages", contactPage.getTotalPages());
+        data.put("totalItems", contactPage.getTotalElements());
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(data);
     }
 
     @Operation(summary = "Update a contact by ID")

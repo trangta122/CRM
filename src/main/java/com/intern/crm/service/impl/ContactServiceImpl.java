@@ -10,10 +10,7 @@ import com.intern.crm.repository.OpportunityRepository;
 import com.intern.crm.service.ContactService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,6 +24,9 @@ public class ContactServiceImpl implements ContactService {
     ContactRepository contactRepository;
     @Autowired
     ModelMapper modelMapper;
+    private Pageable createPageRequest(int page, int size) {
+        return PageRequest.of(page, size);
+    }
 
     //Add a contact for an opportunity
     @Override
@@ -59,7 +59,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<ContactModel> findContactByOpportunityId(String id) {
+    public Page<ContactModel> findContactByOpportunityId(String id, int page, int size) {
         List<Contact> contacts = contactRepository.findContactsByOpportunitiesId(id);
         List<ContactModel> contactModels = new ArrayList<>();
 
@@ -68,16 +68,13 @@ public class ContactServiceImpl implements ContactService {
             contactModels.add(contactModel);
         }
 
-        List<ContactModel> contactModelList = new ArrayList<>();
+        Pageable pageable = createPageRequest(page, size);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), contactModels.size());
 
-        if (contactModels.size() > 0 ) {
-            contactModelList.add(contactModels.get(0));
-            if (contactModels.size() >= 2) {
-                contactModelList.add(contactModels.get(1));
-            }
-        }
+        List<ContactModel> contactPage = contactModels.subList(start, end);
 
-        return  contactModelList;
+        return  new PageImpl<>(contactPage, pageable, contactModels.size());
     }
 
     //Update contact by ID
