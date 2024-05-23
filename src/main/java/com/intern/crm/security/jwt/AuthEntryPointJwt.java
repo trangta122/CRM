@@ -1,6 +1,7 @@
 package com.intern.crm.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.intern.crm.exception.CustomExceptionHandler;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,11 +24,11 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         logger.error("Unauthorized error: {}", authException.getMessage());
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
         final Map<String, Object> body = new HashMap<>();
-        body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-        body.put("error", "Unauthorized");
+        body.put("status", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        body.put("error", "Internal server error");
         body.put("message", authException.getMessage());
         body.put("path", request.getServletPath());
 

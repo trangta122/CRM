@@ -32,9 +32,9 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
     @Autowired
-    private ModelMapper modelMapper;
+    ModelMapper modelMapper;
     @Autowired
     AvatarRepository avatarRepository;
     @Autowired
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         EmailRequest emailRequest = new EmailRequest(
-                "ttt-batch15bd@sdc.edu.vn",
+                "tathitrang1202@gmail.com",
                 "New account email",
                 "Please sign in with the username and password below to start your work: " + "\n" +
                         "Username: " + user.getUsername() + "\n" +
@@ -122,6 +122,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel findUserById(String id) {
+
         User user = userRepository.findById(id).get();
         UserModel userModel = modelMapper.map(user, UserModel.class);
 

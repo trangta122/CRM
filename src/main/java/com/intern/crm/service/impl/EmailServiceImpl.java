@@ -3,6 +3,7 @@ package com.intern.crm.service.impl;
 import com.intern.crm.entity.Activity;
 import com.intern.crm.entity.Opportunity;
 import com.intern.crm.entity.TemplateFile;
+import com.intern.crm.exception.NotFoundException;
 import com.intern.crm.payload.request.EmailRequest;
 import com.intern.crm.repository.ActivityRepository;
 import com.intern.crm.repository.OpportunityRepository;
@@ -114,7 +115,9 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public String sendColdEmail( String opportunityId, EmailRequest emailRequest) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        Opportunity opportunity = opportunityRepository.findById(opportunityId).get();
+        Opportunity opportunity = opportunityRepository.findById(opportunityId).orElseThrow(
+                ()-> new NotFoundException("can't find opportunity with id: " + opportunityId )
+        );
         Map<String, String> data = new HashMap<>();
         data.put("company", opportunity.getCompany());
         data.put("salesperson", opportunity.getSalesperson().getFullname());

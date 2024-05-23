@@ -49,6 +49,9 @@ public class OpportunityServiceImpl implements OpportunityService {
     private String lostId;
     @Value(("${crm.app.stage}"))
     private String stageId;
+    @Value(("${crm.app.won}"))
+    private String wonId;
+
 
     DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
@@ -56,13 +59,10 @@ public class OpportunityServiceImpl implements OpportunityService {
     public Opportunity createOpportunity(CreateOpportunityRequest opportunityRequest) {
         Opportunity opportunity = modelMapper.map(opportunityRequest, Opportunity.class);
 
-        opportunity.setName(opportunity.getCompany());
         opportunity.setCustomer(opportunityRequest.isCustomer());
         opportunity.setProbability((float) 0);
 
-        if (opportunityRequest.getStageId() == null  || opportunityRequest.getStageId() == "") {
-            opportunity.setStage(stageRepository.findById(stageId).get());
-        } else opportunity.setStage(stageRepository.findById(opportunityRequest.getStageId()).get());
+        opportunity.setStage(stageRepository.findById(opportunityRequest.getStageId()).get());
 
 
         if (opportunityRequest.getRevenue() != 0) {
@@ -131,6 +131,7 @@ public class OpportunityServiceImpl implements OpportunityService {
                 stageRepository.save(nextStage);
 
                 opportunity.setStage(nextStage);
+
             }
         }
 
@@ -164,8 +165,12 @@ public class OpportunityServiceImpl implements OpportunityService {
         opportunity.setProbability(opportunityModel.getProbability());
         opportunity.setLostReason(opportunityModel.getLostReason());
         opportunity.setCustomer(opportunityModel.getCustomer());
+
         opportunity.setLastModifiedDate(new Date());
 
+        if (stageId.equals(wonId)) {
+            opportunity.setCustomer(Boolean.TRUE);
+        }
         opportunityRepository.save(opportunity);
 
         return mapOpportunity(opportunity);
